@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mikuweb</title>
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/mouse.css">
+    <link rel="stylesheet" href="../css/sakura.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 汉堡菜单按钮 -->
+    <button class="menu-toggle" aria-label="打开菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <!-- 遮罩层 -->
+    <div class="sidebar-overlay"></div>
+    
+    <!-- 侧边导航栏 -->
+    <nav class="sidebar">
+        <!-- 头部标题 -->
+        <div class="sidebar-header">
+            <h1 class="sidebar-title">Miku画廊</h1>
+        </div>
+        
+        <!-- 主题切换 -->
+        <div class="theme-toggle">
+            <span class="theme-icon">☀️</span>
+            <span class="theme-text">浅色模式</span>
+        </div>
+        
+        <!-- 导航菜单 -->
+        <ul class="nav-menu">
+            <!-- 首页 -->
+            <li class="nav-item">
+                <a href="../index.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </a>
+            </li>
+            
+            <!-- 关于本站（可展开） -->
+            <li class="nav-item expandable">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-text">关于本站</span>
+                    <span class="expand-icon">▼</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">
+                            <span class="nav-text">站点介绍</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#history" class="nav-link">
+                            <span class="nav-text">建站历程</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">
+                            <span class="nav-text">联系方式</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <!-- 图片画廊 -->
+            <li class="nav-item">
+                <a href="#gallery" class="nav-link">
+                    <span class="nav-icon">🖼️</span>
+                    <span class="nav-text">图片画廊</span>
+                </a>
+            </li>
+            
+            <!-- 视频专区 -->
+            <li class="nav-item">
+                <a href="#videos" class="nav-link">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-text">视频专区</span>
+                </a>
+            </li>
+            
+            <!-- 音乐收藏 -->
+            <li class="nav-item">
+                <a href="#music" class="nav-link">
+                    <span class="nav-icon">🎵</span>
+                    <span class="nav-text">音乐收藏</span>
+                </a>
+            </li>
+            
+            <!-- 创作工具 -->
+            <li class="nav-item expandable">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">创作工具</span>
+                    <span class="expand-icon">▼</span>
+                </a>
+                <ul class="sub-menu">
+                    <li class="nav-item">
+                        <a href="#drawing" class="nav-link">
+                            <span class="nav-text">绘画工具</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#editor" class="nav-link">
+                            <span class="nav-text">图片编辑</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 页面主要内容区域 -->
+    <main class="main-content">
+        <h1>欢迎来到Miku画廊</h1>
+        <p>这里是主要内容区域，点击左上角的菜单按钮打开导航栏。</p>
+    </main>
+
+    <div class="cursor-follower" id="cursor"></div>
+    <!-- JavaScript -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/mouse.js"></script>
+    <script src="../js/sakura.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+/* 箭头样式 */
+.scroll-arrow {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 70px;
+    text-decoration: none;
+}
+
+.scroll-arrow span {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 30px;
+    height: 50px;
+    margin-left: -15px;
+    border-left: 3px solid var(--miku-color);
+    border-bottom: 3px solid var(--miku-color);
+    transform: rotate(-45deg);
+    animation: scroll-arrow 2s infinite;
+    box-sizing: border-box;
+}
+
+@keyframes scroll-arrow {
+    0% {
+        opacity: 0;
+        transform: rotate(-45deg) translate(-20px, -20px);
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(-45deg) translate(0, 0);
+    }
+}
+
+.scroll-arrow:hover span {
+    border-color: var(--miku-color);
+}
+

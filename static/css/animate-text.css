@@ -1,0 +1,54 @@
+/* 流光动画文字样式 */
+
+/* 引入字体（演示用） */
+@font-face {
+    font-family: 'MyArtFont';
+    src: local('Times New Roman'); 
+}
+
+.animate-text {
+    font-family: 'MyArtFont', serif;
+    font-weight: bold;
+    font-size: 80px;
+    margin: 40px 0;
+    
+    /* 设置渐变背景 */
+    /* 为了让循环无缝连接，颜色的顺序是 A -> B -> A */
+    background: linear-gradient(
+        120deg, 
+        var(--miku-color) 0%, 
+        #00b4db 50%, 
+        var(--miku-color) 100%
+    );
+    
+    /* 把背景放大，这样才有移动的空间 */
+    background-size: 200% auto;
+    
+    /* 裁剪背景到文字 */
+    -webkit-background-clip: text;
+    background-clip: text;
+    
+    /* 文字透明 */
+    color: transparent;
+
+    /* 添加动画：3秒一次，匀速，无限循环 */
+    animation: flow 3s linear infinite;
+}
+
+/* 定义动画关键帧 */
+@keyframes flow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%; /* 让背景水平移动 */
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .animate-text {
+        font-size: 3rem;
+    }
+}
+

@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background: #222;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+/* 文字样式 */
+.text-trail-item {
+    position: absolute;
+    pointer-events: none; 
+    color: #86e3c3; 
+    font-family: serif;
+    font-weight: bold;
+    font-size: 24px;
+    white-space: nowrap;
+    
+    transform: translate(-50%, -50%);
+    opacity: 0.8;
+    text-shadow: 0 0 5px rgba(134, 227, 195, 0.5);
+    animation: dropAway 1s linear forwards;
+}
+
+/* 文字动画 */
+@keyframes dropAway {
+    0% {
+        transform: translate(-50%, -50%) rotate(var(--r)) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50px) rotate(var(--r)) scale(1.5);
+        opacity: 0;
+    }
+}

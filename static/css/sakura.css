@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    overflow: hidden; 
+    background: #222; 
+    height: 100vh;
+}
+
+/* 樱花样式 */
+.sakura {
+    position: absolute;
+    top: -10px; 
+    background-color: #ffdde1; 
+    border-radius: 100% 0 100% 0; 
+    pointer-events: none; 
+    opacity: 0.8;
+    animation: fall linear infinite;
+    z-index: 9999; 
+}
+
+/* 飘落动画 */
+@keyframes fall {
+    0% {
+        top: -10%;
+        transform: translateX(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    20% {
+        transform: translateX(20px) rotate(45deg);
+    }
+    40% {
+        transform: translateX(-20px) rotate(90deg);
+    }
+    60% {
+        transform: translateX(20px) rotate(135deg);
+    }
+    80% {
+        transform: translateX(-20px) rotate(180deg);
+    }
+    100% {
+        top: 110%; 
+        transform: translateX(0) rotate(225deg);
+        opacity: 0;
+    }
+}
