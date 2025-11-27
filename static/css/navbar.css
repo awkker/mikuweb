@@ -269,14 +269,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     background: rgba(var(--miku-color-rgb), 0.8);
 }
 
-/* 主要内容区域 */
-.main-content {
-    padding: 0;
-    min-height: 100vh;
-    background: #f5f7fa;
-    transition: margin-left 0.3s ease;
-    margin-left: 0;
-}
+
 
 /* 侧边栏打开时，内容区域向右移动 */
 body.sidebar-open .main-content {
