@@ -1,0 +1,141 @@
+/* 顶部图片横幅区域 */
+.hero-banner {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 图片容器 */
+.hero-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 图片样式 - 添加虚化效果 */
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: blur(10px) brightness(1.1);
+    transform: scale(1.1); 
+}
+
+/* 半透明遮罩层 */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* 关键点1：把白色透明度降低，不要盖太厚 */
+    background: rgba(255, 255, 255, 0.15); 
+
+    /* 关键点2：真正的虚化/模糊效果 */
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+
+}
+
+/* 标题内容 - 居中显示 */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* 主标题 */
+.hero-title {
+    font-size: 4rem;
+    margin: 0 0 20px 0;
+    text-shadow: 0 4px 15px rgba(var(--miku-color-rgb), 0.5);
+}
+
+/* 副标题 */
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #fff;
+    margin: 0;
+    font-weight: 300;
+    text-shadow: 0 2px 10px rgba(var(--miku-color-rgb), 0.5);
+    letter-spacing: 2px;
+}
+
+/* 文字内容区域 */
+.content-section {
+    padding: 60px 40px;
+    background: #fff;
+}
+
+.content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* 区域标题 */
+.section-title {
+    font-size: 2.5rem;
+    color: var(--miku-color);
+    margin: 0 0 30px 0;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* 段落文字 */
+.section-text {
+    font-size: 1.1rem;
+    line-height: 2;
+    color: #555;
+    margin: 0 0 20px 0;
+    text-align: justify;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .hero-banner {
+        height: 400px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .content-section {
+        padding: 40px 20px;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-text {
+        font-size: 1rem;
+    }
+}
+
+/* 深色模式 */
+body.dark-mode .content-section {
+    background: #1a1a1a;
+}
+
+body.dark-mode .section-title {
+    color: var(--miku-color);
+}
+
+body.dark-mode .section-text {
+    color: #b0b0b0;
+}

@@ -1,24 +1,19 @@
-body {
-    margin: 0;
-    height: 100vh;
-    background: #222;
-    cursor: crosshair;
-    overflow: hidden;
-}
+/* 鼠标跟随文字特效 */
 
 /* 文字样式 */
 .text-trail-item {
-    position: absolute;
+    position: fixed; /* 改为fixed，避免滚动时位置错乱 */
     pointer-events: none; 
-    color: #86e3c3; 
+    color: var(--miku-color);
     font-family: serif;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 20px;
     white-space: nowrap;
+    z-index: 9998; /* 在内容之上，但在导航栏之下 */
     
     transform: translate(-50%, -50%);
-    opacity: 0.8;
-    text-shadow: 0 0 5px rgba(134, 227, 195, 0.5);
+    opacity: 0.7;
+    text-shadow: 0 0 5px rgba(var(--miku-color-rgb), 0.5);
     animation: dropAway 1s linear forwards;
 }
 

@@ -1,9 +1,12 @@
 /* 侧边导航栏样式 */
 
-/* 防止横向滚动 */
+/* 防止横向滚动，但允许纵向滚动 */
 body {
     overflow-x: hidden;
+    overflow-y: auto !important; /* 强制允许纵向滚动，覆盖其他CSS的overflow: hidden */
     transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
 }
 
 /* 汉堡菜单按钮 */
@@ -23,7 +26,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 6px;
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
     transition: all 0.3s;
 }
 
@@ -53,13 +56,14 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     display: block;
     width: 24px;
     height: 3px;
-    background: #333;
+    background: #fff;
     border-radius: 2px;
     transition: all 0.3s;
 }
 
 .menu-toggle:hover span {
     background: #fff;
+    opacity: 0.8;
 }
 
 /* 侧边栏容器 */
@@ -71,7 +75,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     height: 100vh;
     background: rgba(102, 205, 170, 0.95);
     backdrop-filter: blur(10px);
-    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 20px rgba(255, 255, 255, 0.1);
     z-index: 1000;
     transition: left 0.3s ease;
     overflow-y: auto;
@@ -84,14 +88,15 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
 /* 侧边栏头部 */
 .sidebar-header {
     padding: 30px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-title {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #333;
+    color: #fff;
     margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 主题切换按钮 */
@@ -99,13 +104,13 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
     transition: background 0.3s;
 }
 
 .theme-toggle:hover {
-    background: rgba(var(--miku-color-rgb), 0.1);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .theme-icon {
@@ -117,7 +122,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
 
 .theme-text {
     font-size: 1rem;
-    color: #333;
+    color: #fff;
 }
 
 /* 导航菜单 */
@@ -128,7 +133,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
 }
 
 .nav-item {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .nav-link {
@@ -136,20 +141,20 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     align-items: center;
     padding: 18px 20px;
     text-decoration: none;
-    color: #333;
+    color: #fff;
     font-size: 1rem;
     transition: all 0.3s;
     position: relative;
 }
 
 .nav-link:hover {
-    background: rgba(var(--miku-color-rgb), 0.15);
+    background: rgba(255, 255, 255, 0.25);
     padding-left: 25px;
 }
 
 .nav-link.active {
-    background: rgba(var(--miku-color-rgb), 0.2);
-    border-left: 4px solid var(--miku-color);
+    background: rgba(255, 255, 255, 0.3);
+    border-left: 4px solid #fff;
 }
 
 .nav-icon {
@@ -160,7 +165,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     align-items: center;
     justify-content: center;
     font-size: 20px;
-    color: var(--miku-color);
+    color: #fff;
 }
 
 .nav-text {
@@ -176,6 +181,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     width: 20px;
     height: 20px;
     transition: transform 0.3s;
+    color: #fff;
 }
 
 .nav-item.expanded .expand-icon {
@@ -190,7 +196,7 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    background: rgba(0, 0, 0, 0.02);
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .nav-item.expanded .sub-menu {
@@ -265,9 +271,9 @@ body.sidebar-open .menu-toggle span:nth-child(3) {
 
 /* 主要内容区域 */
 .main-content {
-    padding: 80px 40px 40px;
+    padding: 0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5f7fa;
     transition: margin-left 0.3s ease;
     margin-left: 0;
 }
@@ -313,14 +319,6 @@ body.dark-mode .menu-toggle span {
 }
 
 body.dark-mode .main-content {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-}
-
-body.dark-mode .main-content h1 {
-    color: #e0e0e0;
-}
-
-body.dark-mode .main-content p {
-    color: #b0b0b0;
+    background: #1a1a1a;
 }
 
