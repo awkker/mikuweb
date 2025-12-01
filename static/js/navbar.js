@@ -29,13 +29,13 @@ function createNavbar() {
             <ul class="nav-menu">
                 <!-- 首页 -->
                 <li class="nav-item">
-                    <a href="../../index.html" class="nav-link">
+                    <a href="../html/main.html" class="nav-link">
                         <span class="nav-text">首页</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="../html/index.html" class="nav-link">
+                    <a href="../html/Introduction.html" class="nav-link">
                         <span class="nav-text">站点介绍</span>
                     </a>
                 </li>
@@ -105,6 +105,18 @@ function createNavbar() {
 
 // 页面加载时自动创建导航栏
 document.addEventListener('DOMContentLoaded', function() {
+    // 从localStorage读取并应用主题（无论是否在iframe中）
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    // 检测是否在iframe中运行，如果是则不创建导航栏
+    if (window.self !== window.top) {
+        document.body.classList.add('in-iframe');
+        return;
+    }
+    
     // 创建导航栏
     createNavbar();
     const menuToggle = document.querySelector('.menu-toggle');
@@ -147,19 +159,48 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 主题切换
     const themeToggle = document.querySelector('.theme-toggle');
+    
+    // 应用主题到当前页面
+    const applyTheme = (isDark) => {
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+        
+        // 更新按钮显示
+        const themeIcon = document.querySelector('.theme-icon');
+        const themeText = document.querySelector('.theme-text');
+        if (themeIcon) themeIcon.textContent = isDark ? '🌙' : '☀️';
+        if (themeText) themeText.textContent = isDark ? '深色模式' : '浅色模式';
+        
+        // 同步到iframe（如果存在）
+        const iframe = document.getElementById('contentFrame');
+        if (iframe && iframe.contentDocument) {
+            try {
+                if (isDark) {
+                    iframe.contentDocument.body.classList.add('dark-mode');
+                } else {
+                    iframe.contentDocument.body.classList.remove('dark-mode');
+                }
+            } catch (e) {
+                // 跨域时无法访问
+            }
+        }
+    };
+    
+    // 应用已保存的主题（如果是深色模式，更新按钮显示）
+    if (document.body.classList.contains('dark-mode')) {
+        const themeText = document.querySelector('.theme-text');
+        if (themeText) themeText.textContent = '深色模式';
+    }
+    
     if (themeToggle) {
         themeToggle.addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            const themeIcon = this.querySelector('.theme-icon');
-            const themeText = this.querySelector('.theme-text');
-            
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.textContent = '🌙';
-                themeText.textContent = '深色模式';
-            } else {
-                themeIcon.textContent = '☀️';
-                themeText.textContent = '浅色模式';
-            }
+            const isDark = !document.body.classList.contains('dark-mode');
+            applyTheme(isDark);
+            // 保存到localStorage
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
     }
     

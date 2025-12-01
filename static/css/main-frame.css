@@ -1,0 +1,36 @@
+/* 主框架页面样式 - 仅控制iframe布局 */
+
+/* ========== iframe 内容区域 ========== */
+.content-frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    z-index: 1;
+    /* 平滑过渡动画 */
+    transition: left 0.3s ease, width 0.3s ease;
+}
+
+/* 侧边栏打开时，iframe跟着移动 */
+body.sidebar-open .content-frame {
+    left: 280px;
+    width: calc(100% - 280px);
+}
+
+/* 移动端不移动iframe */
+@media (max-width: 768px) {
+    body.sidebar-open .content-frame {
+        left: 0;
+        width: 100%;
+    }
+}
+
+/* ========== 隐藏空的main-content ========== */
+body > .main-content:empty {
+    display: none;
+}

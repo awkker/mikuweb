@@ -315,3 +315,14 @@ body.dark-mode .main-content {
     background: #1a1a1a;
 }
 
+/* ========== iframe模式（嵌入在main.html中时） ========== */
+body.in-iframe .menu-toggle,
+body.in-iframe .sidebar,
+body.in-iframe .sidebar-overlay {
+    display: none !important;
+}
+
+body.in-iframe .main-content {
+    margin-left: 0 !important;
+    padding-top: 0;
+}

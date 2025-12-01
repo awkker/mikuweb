@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 设置图片
             if (img && modalImg) {
-                modalImg.src = img.src;
+            modalImg.src = img.src;
             }
             
             // 设置标题
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
     }
     
     modal.addEventListener('click', (e) => {

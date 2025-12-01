@@ -1,0 +1,27 @@
+/* 画廊 - 顶部横幅 */
+
+.hero-banner-simple {
+    padding: 80px 20px 40px;
+    text-align: center;
+    background: linear-gradient(135deg, 
+        rgba(var(--miku-color-rgb), 0.1) 0%, 
+        rgba(var(--miku-color-rgb), 0.05) 100%);
+}
+
+.hero-content-simple {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-banner-simple .hero-title {
+    font-size: 3rem;
+    margin: 0 0 15px 0;
+}
+
+.hero-banner-simple .hero-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0;
+    font-weight: 300;
+}
+

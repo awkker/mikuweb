@@ -20,11 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // 点击图片区域 -> 打开大图
         if (imageWrapper && img) {
             imageWrapper.addEventListener('click', (e) => {
-                e.stopPropagation();
+            e.stopPropagation();
                 lightboxImg.src = img.src;
-                lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
         }
         
         // 点击爱心按钮 -> 切换喜欢状态

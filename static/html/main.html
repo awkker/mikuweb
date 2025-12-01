@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miku画廊 - 初音未来艺术展</title>
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/main-frame.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+</head>
+<body>
+    <!-- 侧边导航栏由 navbar.js 自动创建 -->
+    
+    <!-- 内容iframe -->
+    <iframe src="index.html" id="contentFrame" class="content-frame" name="contentFrame"></iframe>
+
+    <!-- 音乐播放器容器（APlayer fixed模式会自己定位） -->
+    <div id="aplayer"></div>
+
+    <!-- JavaScript -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/main-frame.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+    <script src="../js/music_aplayer.js"></script>
+</body>
+</html>

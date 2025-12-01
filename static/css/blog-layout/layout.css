@@ -1,0 +1,24 @@
+/* 博客布局 - 整体布局容器 */
+
+.blog-wrapper {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+}
+
+/* 左侧：文章列表区域 */
+.article-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 右侧：作者侧边栏 */
+.author-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+}
+
