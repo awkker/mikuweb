@@ -1,0 +1,85 @@
+/* 留言板 - 布局样式 */
+
+.comment-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 标题区域 */
+.comment-header {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.comment-title {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    font-style: italic;
+    color: #e8a0a0;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+}
+
+.comment-count {
+    font-size: 1rem;
+    color: #999;
+    font-weight: 400;
+}
+
+/* 评论列表容器 */
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* 分隔线 */
+.comment-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200, 150, 150, 0.3), transparent);
+    margin: 20px 0;
+}
+
+/* 加载状态 */
+.comment-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1rem;
+}
+
+.comment-loading::before {
+    content: "🌸";
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* 空状态 */
+.comment-empty {
+    text-align: center;
+    padding: 80px 20px;
+    color: #aaa;
+}
+
+.comment-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.comment-empty-text {
+    font-size: 1.1rem;
+}
+

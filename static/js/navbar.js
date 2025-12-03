@@ -71,6 +71,13 @@ function createNavbar() {
                     </ul>
                 </li>
 
+                <!-- 留言板 -->
+                <li class="nav-item">
+                    <a href="../html/comment.html" class="nav-link">
+                        <span class="nav-text">留言板</span>
+                    </a>
+                </li>
+
                 <!-- 关于本站（可展开） -->
                 <li class="nav-item expandable">
                     <a href="#" class="nav-link">
@@ -79,8 +86,8 @@ function createNavbar() {
                     </a>
                     <ul class="sub-menu">
                         <li class="nav-item">
-                            <a href="#about" class="nav-link">
-                                <span class="nav-text">站点介绍</span>
+                            <a href="../html/author.html" class="nav-link">
+                                <span class="nav-text">作者信息</span>
                             </a>
                         </li>
                         <li class="nav-item">

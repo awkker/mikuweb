@@ -1,0 +1,32 @@
+/* 留言板 - 标签样式 */
+
+/* 博主标签 */
+.tag-author {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #a8d8a0, #7bc96f);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* 新评论标签 */
+.tag-new {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, #ff9a9e, #fecfef);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}

@@ -1,0 +1,142 @@
+/* 留言板 - 评论卡片样式 */
+
+.comment-card {
+    display: flex;
+    gap: 20px;
+    padding: 30px 25px;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 15px rgba(200, 150, 150, 0.1);
+}
+
+.comment-card:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 20px rgba(200, 150, 150, 0.15);
+}
+
+/* 头像区域 */
+.comment-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(200, 200, 200, 0.3);
+    background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+    transition: border-color 0.3s ease;
+}
+
+.comment-card:hover .avatar-img {
+    border-color: rgba(232, 160, 160, 0.5);
+}
+
+/* 评论主体 */
+.comment-body {
+    flex: 1;
+    min-width: 0;
+}
+
+/* 用户信息行 */
+.comment-user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.comment-nickname {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* 元数据行 */
+.comment-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.comment-time {
+    color: #999;
+}
+
+.comment-time::before {
+    content: "发布于 ";
+    color: #aaa;
+}
+
+/* 浏览器和系统信息 */
+.comment-browser,
+.comment-os {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.comment-browser img,
+.comment-os img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.comment-location {
+    color: #888;
+}
+
+.comment-location::before {
+    content: "来自: ";
+    color: #aaa;
+}
+
+/* 操作按钮 */
+.comment-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* 评论内容 */
+.comment-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #444;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* 表情图片 */
+.comment-content img.emoji {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+/* 删除按钮 */
+.comment-delete-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.3s;
+    font-size: 0.8rem;
+}
+
+.comment-delete-btn:hover {
+    color: #e74c3c;
+}

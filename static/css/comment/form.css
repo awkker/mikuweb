@@ -1,0 +1,171 @@
+/* 留言板 - 表单样式 */
+
+.comment-form-container {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(200, 150, 150, 0.1);
+}
+
+.comment-form-title {
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(232, 160, 160, 0.3);
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 昵称输入行 */
+.form-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group.nickname-group {
+    flex: 0 0 200px;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.form-input {
+    padding: 12px 16px;
+    border: 2px solid rgba(200, 200, 200, 0.3);
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: rgba(232, 160, 160, 0.6);
+    box-shadow: 0 0 0 4px rgba(232, 160, 160, 0.1);
+}
+
+.form-input::placeholder {
+    color: #bbb;
+}
+
+/* 内容输入区 */
+.form-group.content-group {
+    flex: 1;
+}
+
+.form-textarea {
+    padding: 16px;
+    border: 2px solid rgba(200, 200, 200, 0.3);
+    border-radius: 12px;
+    font-size: 1rem;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    outline: none;
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+}
+
+.form-textarea:focus {
+    border-color: rgba(232, 160, 160, 0.6);
+    box-shadow: 0 0 0 4px rgba(232, 160, 160, 0.1);
+}
+
+.form-textarea::placeholder {
+    color: #bbb;
+}
+
+/* 表情选择器 */
+.emoji-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+}
+
+.emoji-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji-btn:hover {
+    background: rgba(232, 160, 160, 0.2);
+    transform: scale(1.1);
+}
+
+/* 提交按钮 */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding-top: 10px;
+}
+
+.submit-btn {
+    padding: 12px 36px;
+    background: linear-gradient(135deg, #e8a0a0, #d4918f);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(232, 160, 160, 0.3);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(232, 160, 160, 0.4);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 字数统计 */
+.char-count {
+    font-size: 0.85rem;
+    color: #aaa;
+    text-align: right;
+    margin-top: -10px;
+}
+
+.char-count.warning {
+    color: #e74c3c;
+}
+

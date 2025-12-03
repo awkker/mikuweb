@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>高级评论区 Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #f9f9f9;">
+
+<my-comments></my-comments>
+
+<script>
+    class MyComments extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' });
+            this.apiUrl = 'http://localhost:8080/comments';
+        }
+
+        connectedCallback() {
+            // 引入外部 FontAwesome 到 ShadowDOM (这一步是为了让图标在组件内生效)
+            const faLink = document.createElement('link');
+            faLink.setAttribute('rel', 'stylesheet');
+            faLink.setAttribute('href', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+            this.shadowRoot.appendChild(faLink);
+
+            this.render();
+            this.fetchComments();
+        }
+
+        render() {
+            // 追加 CSS 和 HTML 结构
+            const container = document.createElement('div');
+            container.innerHTML = `
+                <style>
+                    :host { display: block; font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+                    .container {
+                        max-width: 600px; margin: 40px auto;
+                        background: white;
+                        border-radius: 12px; padding: 20px;
+                        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+                    }
+                    h3 { margin-top: 0; color: #333; display: flex; align-items: center; gap: 8px;}
+
+                    /* 输入区样式 */
+                    .input-area { background: #f0f2f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+                    .input-group { display: flex; gap: 10px; }
+                    input {
+                        flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; transition: 0.2s;
+                    }
+                    input:focus { border-color: #fb7299; box-shadow: 0 0 0 2px rgba(251, 114, 153, 0.2); }
+                    button.send-btn {
+                        padding: 0 20px; background: #fb7299; color: white; font-weight: bold;
+                        border: none; border-radius: 6px; cursor: pointer; transition: 0.2s;
+                    }
+                    button.send-btn:hover { background: #e05e83; }
+
+                    /* 评论列表样式 */
+                    ul { list-style: none; padding: 0; }
+                    li {
+                        display: flex; gap: 15px; padding: 20px 0; border-bottom: 1px solid #eee;
+                        animation: fadeIn 0.3s ease;
+                    }
+
+                    /* 头像样式更新 */
+                    .avatar {
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 5px; /* GitHub 是圆角矩形，如果想要圆形改成 50% */
+                        background: #f0f0f0;
+                        flex-shrink: 0;
+                        object-fit: cover; /* 防止图片变形 */
+                        border: 1px solid #eee;
+                    }
+
+                    .main-content { flex: 1; }
+
+                    .user-info { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+                    .nickname { font-weight: bold; color: #fb7299; font-size: 14px; }
+                    .badge {
+                        font-size: 10px; padding: 1px 4px; border-radius: 3px;
+                        border: 1px solid #fb7299; color: #fb7299;
+                    }
+
+                    .text { font-size: 15px; color: #333; line-height: 1.5; margin-bottom: 8px; word-break: break-all;}
+
+                    /* 底部元数据栏 (模仿截图) */
+                    .meta-row {
+                        display: flex; align-items: center; gap: 12px;
+                        font-size: 12px; color: #99a2aa;
+                    }
+                    .meta-item { display: flex; align-items: center; gap: 4px; }
+
+                    /* 操作按钮 */
+                    .actions { margin-left: auto; display: flex; gap: 10px; opacity: 0; transition: 0.2s;}
+                    li:hover .actions { opacity: 1; } /* 鼠标悬停才显示删除 */
+                    .del-btn { cursor: pointer; color: #ff4d4f; border:none; background:none; font-size:12px;}
+                    .del-btn:hover { text-decoration: underline; }
+
+                    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+                </style>
+
+                <div class="container">
+                    <h3><i class="fa-solid fa-comments" style="color:#fb7299"></i> 评论区</h3>
+
+                    <div class="input-area">
+                        <div class="input-group">
+                            <input type="text" id="nicknameInput" placeholder="你的昵称" style="flex:0.3; margin-right:5px;" value="访客" />
+                            <input type="text" id="input" placeholder="发一条友善的评论..." />
+                            <button class="send-btn" id="btn">发布</button>
+                        </div>
+                    </div>
+
+                    <ul id="list">加载中...</ul>
+                </div>
+                `;
+
+            this.shadowRoot.appendChild(container);
+            this.shadowRoot.getElementById('btn').onclick = () => this.postComment();
+        }
+
+        // 解析 User-Agent 的简易函数
+        parseUA(uaString) {
+            let browser = { icon: 'fa-globe', name: 'Web' };
+            let os = { icon: 'fa-desktop', name: 'System' };
+
+            if (!uaString) return { browser, os };
+
+            // 简单的正则匹配 (为了演示，只匹配常见款)
+            if (uaString.includes("Win")) os = { icon: 'fa-windows', name: 'Windows' };
+            else if (uaString.includes("Mac")) os = { icon: 'fa-apple', name: 'macOS' };
+            else if (uaString.includes("Android")) os = { icon: 'fa-android', name: 'Android' };
+            else if (uaString.includes("Linux")) os = { icon: 'fa-linux', name: 'Linux' };
+
+            if (uaString.includes("Chrome")) browser = { icon: 'fa-chrome', name: 'Chrome' };
+            else if (uaString.includes("Firefox")) browser = { icon: 'fa-firefox', name: 'Firefox' };
+            else if (uaString.includes("Safari") && !uaString.includes("Chrome")) browser = { icon: 'fa-safari', name: 'Safari' };
+            else if (uaString.includes("Edge")) browser = { icon: 'fa-edge', name: 'Edge' };
+
+            return { browser, os };
+        }
+
+        async fetchComments() {
+            try {
+                const res = await fetch(this.apiUrl);
+                const data = await res.json();
+
+                const list = this.shadowRoot.getElementById('list');
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<li style="justify-content:center;color:#999">暂无评论，快来抢沙发！</li>';
+                    return;
+                }
+
+                // ... 在 fetchComments 里面 ...
+
+                list.innerHTML = data.map(c => {
+                    const { browser, os } = this.parseUA(c.user_agent);
+                    const timeStr = new Date(c.created_at).toLocaleString('zh-CN', { hour12: false }).replace(/\//g, "-");
+
+                    // --- 核心修改：生成随机头像 URL ---
+                    // 使用 DiceBear API，seed 填昵称，这样同一个人的头像永远固定
+                    // 风格选用 'identicon' (GitHub风格)
+                    const avatarUrl = `https://api.dicebear.com/9.x/identicon/svg?seed=${encodeURIComponent(c.nickname)}`;
+
+                    // 如果你喜欢像素小人风，把上面的 'identicon' 换成 'pixel-art'
+                    // 如果喜欢二次元风，换成 'adventurer'
+
+                    return `
+                 <li>
+                    <img class="avatar" src="${avatarUrl}" alt="avatar">
+
+                        <div class="main-content">
+                            <div class="user-info">
+                <span class="nickname">${this.escapeHtml(c.nickname)}</span>
+                <span class="badge">Lv${c.id % 6 + 1}</span>
+                ${c.nickname === 'awkker' ? '<span style="background:#fb7299;color:white;font-size:10px;padding:0 4px;border-radius:3px;">博主</span>' : ''}
+            </div>
+            <div class="text">${this.escapeHtml(c.content)}</div>
+            <div class="meta-row">
+                <span class="meta-item">${timeStr}</span>
+                <span class="meta-item"><i class="fa-brands ${browser.icon}"></i> ${browser.name}</span>
+                <span class="meta-item"><i class="fa-brands ${os.icon}"></i> ${os.name}</span>
+                <span class="meta-item"><i class="fa-solid fa-location-dot"></i> ${this.escapeHtml(c.location)}</span>
+                <div class="actions">
+                    <button class="del-btn" data-id="${c.id}">删除</button>
+                </div>
+            </div>
+        </div>
+    </li>
+`}).join('');
+
+                // 绑定所有的删除按钮事件
+                this.shadowRoot.querySelectorAll('.del-btn').forEach(btn => {
+                    btn.onclick = (e) => this.deleteComment(e.target.dataset.id);
+                });
+
+            } catch (err) {
+                console.error(err);
+                this.shadowRoot.getElementById('list').innerHTML = '加载失败';
+            }
+        }
+
+        async postComment() {
+            const input = this.shadowRoot.getElementById('input');
+            const nickInput = this.shadowRoot.getElementById('nicknameInput');
+            const content = input.value.trim();
+            const nickname = nickInput.value.trim();
+
+            if (!content) return;
+
+            try {
+                await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, nickname })
+                });
+                input.value = '';
+                this.fetchComments();
+            } catch (err) {
+                alert("发送失败！");
+            }
+        }
+
+        async deleteComment(id) {
+            if(!confirm("确认删除这条评论吗？")) return;
+            try {
+                await fetch(`${this.apiUrl}/${id}`, { method: 'DELETE' });
+                this.fetchComments();
+            } catch(err) {
+                alert("删除失败");
+            }
+        }
+
+        escapeHtml(text) {
+            if(!text) return "";
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    }
+
+    customElements.define('my-comments', MyComments);
+</script>
+</body>
+</html>

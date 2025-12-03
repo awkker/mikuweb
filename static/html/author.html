@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作者信息 - Miku画廊</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/mouse.css">
+    <link rel="stylesheet" href="../css/sakura.css">
+
+    <style>
+        /* --- 全局基础 --- */
+        :root {
+            --miku-teal: #39C5BB;
+            --miku-pink: #E4007F;
+            --text-main: #24292f; /* GitHub 同款深灰 */
+            --text-sub: #57606a;  /* GitHub 同款浅灰 */
+            --bg-glass: rgba(255, 255, 255, 0.92); /* 微微透光的白纸质感 */
+            --border-color: #d0d7de;
+        }
+    </style>
+    <style>
+        body {
+            background-image: url('../images/picture/author/ui.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+    </style>
+    <style>
+
+        /* --- 主容器：像一张A4纸一样浮在背景上 --- */
+        .main-container {
+            max-width: 900px; /* 类似 GitHub 宽屏时的内容宽度 */
+            margin: 60px auto;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px); /* 毛玻璃 */
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* 稍微圆润一点 */
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08); /* 柔和的阴影 */
+        }
+
+        /* --- 头部区域：头像 + 名字 --- */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color); /* 经典的分割线 */
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(57, 197, 187, 0.3); /* Miku色光晕 */
+            object-fit: cover;
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .profile-info .bio {
+            color: var(--text-sub);
+            margin: 5px 0 10px 0;
+            font-size: 16px;
+        }
+
+        .social-links a {
+            color: var(--text-sub);
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+        .social-links a:hover {
+            color: var(--miku-teal); /* 悬停变色 */
+        }
+
+        /* --- 内容区块风格 --- */
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        h2 i { color: var(--text-sub); font-size: 18px; }
+
+        p { color: var(--text-main); margin-bottom: 15px; }
+
+        /* 链接样式 */
+        a.text-link {
+            color: var(--miku-teal);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a.text-link:hover { text-decoration: underline; }
+
+        /* --- 卡片网格 (模仿 GitHub Pinned Repos) --- */
+        /* 这种设计非常整齐、美观 */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 自动适应宽度 */
+            gap: 16px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            transition: 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: var(--miku-teal); /* 悬停时边框变色 */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: var(--miku-teal);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-sub);
+            line-height: 1.5;
+        }
+        
+        /* 响应式适配手机 */
+        @media (max-width: 600px) {
+            .main-container { padding: 20px; margin: 20px; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .grid-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="NavBarMain"></div> 
+
+    <div class="main-container">
+        
+        <div class="profile-header">
+            <img src="../images/picture/author/awkker.png" alt="头像" class="avatar">
+            
+            <div class="profile-info">
+                <h1>曹瀚文</h1> <p class="bio"> World is Mine | 致力于构建最美的二次元画廊</p>
+                
+                <div class="social-links">
+                    <a href="https://github.com/awkker" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://space.bilibili.com/472356194?spm_id_from=333.1007.0.0" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili"></i></a>
+                    <a href="https://mail.126.com/list/chw0536@126.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <section>
+            <h2><i class="fa-solid fa-book-open"></i> 关于本站</h2>
+            <p>
+                欢迎来到 Miku画廊。 这是一个基于 Go + Gin + Vanilla JS 构建的纯净数字空间。 我们相信代码的温度在于传递美好，因此我们将舞台完全留给画作，让技术隐于幕后，只为让你在那一抹葱绿中，感受最纯粹的心动。
+            </p>
+            <p>
+                本站代码已在 <a href="#" class="text-link">GitHub</a> 开源，如果你喜欢这个项目，欢迎点一个 Star ⭐。
+            </p>
+        </section>
+
+        <section>
+            <h2><i class="fa-solid fa-th-large"></i> 友情链接 & 传送门</h2>
+            
+            <div class="grid-cards">
+                
+                <a href="https://caoxunyi.cn/" target="_blank" class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-house-chimney"></i> 薰逸的猫窝
+                    </div>
+                    <div class="card-desc">我的个人博客主站，记录生活与技术的点滴。</div>
+                </a>
+
+                <a href="" target="_blank" class="card">
+                    <div class="card-title">
+                        <i class="fa-solid fa-compact-disc"></i> Miku画廊
+                    </div>
+                    <div class="card-desc">一个展示初音未来画作的画廊</div>
+                </a>
+
+                <a href="https://github.com/awkker/mikuweb" target="_blank" class="card">
+                    <div class="card-title">
+                        <i class="fa-brands fa-github"></i> Mikuweb源代码
+                    </div>
+                    <div class="card-desc">查看本站源码以及更多好玩的开源项目。</div>
+                </a>
+
+            </div>
+        </section>
+
+        <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #999;">
+            <p>© 2025 Miku Gallery | Powered by <i class="fa-solid fa-heart" style="color: #fb7299;"></i> & Electricity</p>
+        </div>
+
+    </div>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/mouse.js"></script>
+    <script src="../js/sakura.js"></script>
+
+</body>
+</html>

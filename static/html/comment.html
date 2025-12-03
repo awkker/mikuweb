@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>留言板 - Miku画廊</title>
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/mouse.css">
+    <link rel="stylesheet" href="../css/sakura.css">
+    <link rel="stylesheet" href="../css/picture.css">
+    <link rel="stylesheet" href="../css/animate-text.css">
+    <link rel="stylesheet" href="../css/word.css">
+    <link rel="stylesheet" href="../css/comment/index.css">
+    <style>
+        body {
+            background-image: url('../images/picture/comment/ui.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        /* 头像占位符样式 */
+        .avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #888;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 留言板主体 -->
+    <div class="comment-container">
+        <!-- 标题区域 -->
+        <div class="comment-header">
+            <h1 class="comment-title">Comments</h1>
+            <span class="comment-count" id="comment-count">0 条评论</span>
+        </div>
+
+        <!-- 发表评论表单 -->
+        <div class="comment-form-container">
+            <h2 class="comment-form-title">发表你的想法</h2>
+            <form class="comment-form" id="comment-form">
+                <div class="form-row">
+                    <div class="form-group nickname-group">
+                        <label class="form-label">昵称</label>
+                        <input type="text" name="nickname" class="form-input" placeholder="你的昵称（选填）" maxlength="20">
+                    </div>
+                </div>
+                <div class="form-group content-group">
+                    <label class="form-label">内容</label>
+                    <textarea name="content" class="form-textarea" placeholder="说点什么吧..." maxlength="1000"></textarea>
+                    <div class="char-count" id="char-count">0 / 1000</div>
+                </div>
+                <div class="emoji-picker" id="emoji-picker"></div>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">发表评论</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 评论列表 -->
+        <div class="comment-list" id="comment-list">
+            <div class="comment-loading">加载中...</div>
+        </div>
+    </div>
+
+    <h1></h1>
+    <!-- javascript -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/mouse.js"></script>
+    <script src="../js/sakura.js"></script>
+    <script src="../js/comment.js"></script>
+</body>
+</html>
