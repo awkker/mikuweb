@@ -1,0 +1,134 @@
+ /* --- 全局基础 --- */
+ :root {
+    --miku-teal: #39C5BB;
+    --miku-pink: #E4007F;
+    --text-main: #24292f; /* GitHub 同款深灰 */
+    --text-sub: #57606a;  /* GitHub 同款浅灰 */
+    --bg-glass: rgba(255, 255, 255, 0.92); /* 微微透光的白纸质感 */
+    --border-color: #d0d7de;
+}
+
+ /* --- 主容器：像一张A4纸一样浮在背景上 --- */
+ .main-container {
+    max-width: 900px; /* 类似 GitHub 宽屏时的内容宽度 */
+    margin: 60px auto;
+    background: var(--bg-glass);
+    backdrop-filter: blur(8px); /* 毛玻璃 */
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* 稍微圆润一点 */
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08); /* 柔和的阴影 */
+}
+
+/* --- 头部区域：头像 + 名字 --- */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-color); /* 经典的分割线 */
+    margin-bottom: 30px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 4px 12px rgba(57, 197, 187, 0.3); /* Miku色光晕 */
+    object-fit: cover;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.profile-info .bio {
+    color: var(--text-sub);
+    margin: 5px 0 10px 0;
+    font-size: 16px;
+}
+
+.social-links a {
+    color: var(--text-sub);
+    margin-right: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.2s;
+}
+.social-links a:hover {
+    color: var(--miku-teal); /* 悬停变色 */
+}
+
+/* --- 内容区块风格 --- */
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+h2 i { color: var(--text-sub); font-size: 18px; }
+
+p { color: var(--text-main); margin-bottom: 15px; }
+
+/* 链接样式 */
+a.text-link {
+    color: var(--miku-teal);
+    text-decoration: none;
+    font-weight: 500;
+}
+a.text-link:hover { text-decoration: underline; }
+
+/* --- 卡片网格 (模仿 GitHub Pinned Repos) --- */
+/* 这种设计非常整齐、美观 */
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 自动适应宽度 */
+    gap: 16px;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    transition: 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    border-color: var(--miku-teal); /* 悬停时边框变色 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card-title {
+    font-weight: 600;
+    color: var(--miku-teal);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-desc {
+    font-size: 13px;
+    color: var(--text-sub);
+    line-height: 1.5;
+}
+
+/* 响应式适配手机 */
+@media (max-width: 600px) {
+    .main-container { padding: 20px; margin: 20px; }
+    .profile-header { flex-direction: column; text-align: center; }
+    .grid-cards { grid-template-columns: 1fr; }
+}

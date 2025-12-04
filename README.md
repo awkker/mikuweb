@@ -1,183 +1,116 @@
-# Mikuweb 视频背景项目
+# 🌸 Miku画廊
 
-一个使用视频作为网页背景的项目，展示初音未来的视频作为全屏封面背景。
+一个展示初音未来画作的纯净数字空间，基于 Go + Gin + Vanilla JS 构建。
 
-## 项目结构
+> 我们相信代码的温度在于传递美好，因此我们将舞台完全留给画作，让技术隐于幕后，只为让你在那一抹葱绿中，感受最纯粹的心动。
+
+## ✨ 功能特性
+
+- 🎨 **画廊瀑布流** - 类似 Pixiv 的多列自适应布局
+- 📝 **博客风格作品集** - 画师作品展示页面
+- 💬 **留言板系统** - 支持评论、删除、设备信息显示
+- 🌓 **深浅色模式** - 一键切换，自动记忆偏好
+- 🌸 **樱花飘落特效** - 沉浸式视觉体验
+- ✨ **鼠标文字拖影** - Miku 绿色跟随特效
+- 📱 **响应式设计** - 完美适配桌面/平板/手机
+- 🎵 **音乐播放器** - 基于 APlayer 集成
+
+## 📁 项目结构
 
 ```
 mikuweb/
-├── index.html              # 主页面
-├── index.js                # JavaScript文件
-├── package.json            # 项目配置
+├── index.html                # 视频封面入口页
+├── comments/                 # 留言板后端
+│   ├── main.go              # Go + Gin 服务
+│   └── comments.db          # SQLite 数据库
 ├── static/
+│   ├── html/
+│   │   ├── main.html        # 主框架（iframe容器）
+│   │   ├── sum.html         # 画廊瀑布流页面
+│   │   ├── cn_Matcha.html   # 画师作品集示例
+│   │   ├── comment.html     # 留言板页面
+│   │   ├── author.html      # 作者信息页
+│   │   └── ...
 │   ├── css/
-│   │   └── video.css      # 视频背景样式
-│   ├── images/
-│   │   ├── picture/       # 图片资源
-│   │   └── video/         # 视频资源
-│   │       └── 作为谢礼的冰淇淋-初音未来1.mp4
-│   └── js/
-└── README.md              # 本文档
+│   │   ├── colors.css       # 全局颜色变量
+│   │   ├── navbar.css       # 侧边导航栏
+│   │   ├── mouse.css        # 鼠标特效
+│   │   ├── sakura.css       # 樱花特效
+│   │   ├── gallery/         # 画廊样式模块
+│   │   ├── blog-layout/     # 博客布局样式模块
+│   │   └── comment/         # 留言板样式模块
+│   ├── js/
+│   │   ├── navbar.js        # 导航栏 + 主题切换
+│   │   ├── main-frame.js    # 主框架 iframe 控制
+│   │   ├── gallery.js       # 画廊交互（Lightbox）
+│   │   ├── blog-layout.js   # 博客布局交互
+│   │   ├── comment.js       # 留言板前端逻辑
+│   │   ├── mouse.js         # 鼠标跟随特效
+│   │   └── sakura.js        # 樱花飘落动画
+│   └── images/
+│       ├── picture/         # 图片资源
+│       ├── video/           # 视频资源
+│       └── music/           # 音乐资源
+└── md/                       # 开发文档
 ```
 
-## 功能特性
+## 🚀 快速开始
 
-- ✅ 全屏视频背景
-- ✅ 自动播放、循环播放
-- ✅ 响应式设计，适配不同屏幕尺寸
-- ✅ 视频自动填充屏幕，无黑边
-- ✅ 居中显示，保证视频中心部分始终可见
+### 前端预览
 
-## 技术实现
+直接使用本地服务器打开项目即可：
 
-### HTML 结构
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Mikuweb</title>
-    <link rel="stylesheet" href="static/css/video.css">
-</head>
-<body>
-    <video autoplay muted loop playsinline class="bg-video">
-        <source src="static/images/video/作为谢礼的冰淇淋-初音未来1.mp4" type="video/mp4">
-    </video>
-</body>
-</html>
+```bash
+# 使用 VS Code Live Server 或
+npx serve .
+# 或
+python -m http.server 8000
 ```
 
-### CSS 样式
+### 启动留言板后端
+
+```bash
+cd comments
+go run main.go
+# 服务启动: http://localhost:8080
+```
+
+## 🎨 主题色
+
+项目使用统一的 Miku 绿作为主题色：
 
 ```css
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.bg-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: 100vw;
-    height: 100vh;
-    transform: translate(-50%, -50%);
-    z-index: -100;
-    object-fit: cover;
-    object-position: center;
+:root {
+    --miku-color: rgb(102, 205, 170);
+    --miku-color-rgb: 102, 205, 170;
 }
 ```
 
-## 关键属性说明
+## 📖 开发文档
 
-### Video 标签属性
-- `autoplay`: 自动播放
-- `muted`: 静音（必须静音才能自动播放）
-- `loop`: 循环播放
-- `playsinline`: iOS设备上内联播放，不全屏
+详细的模块说明文档在 `md/` 目录下：
 
-### CSS 样式说明
-- `position: fixed`: 固定定位，不随页面滚动
-- `top: 50%; left: 50%`: 定位到页面中心
-- `transform: translate(-50%, -50%)`: 居中对齐
-- `object-fit: cover`: 填充整个容器，保持视频比例
-- `object-position: center`: 视频内容居中显示
-- `z-index: -100`: 置于所有内容下方作为背景
+| 文档 | 说明 |
+|------|------|
+| 主框架系统说明.md | iframe 架构设计 |
+| 导航栏使用说明.md | 侧边栏组件用法 |
+| 深浅色模式切换说明.md | 主题切换实现 |
+| 画廊瀑布流布局说明.md | 瀑布流 CSS 布局 |
+| 博客布局模板说明.md | 作品集页面模板 |
+| 留言板系统说明.md | 评论系统前后端 |
 
-## 遇到的问题与解决方案
+## 🔗 链接
 
-### 问题1: CSS文件加载失败（MIME类型错误）
+- **在线预览**: [mikuweb.pages.dev](https://mikuweb.pages.dev/)
+- **源代码**: [github.com/awkker/mikuweb](https://github.com/awkker/mikuweb)
+- **作者博客**: [caoxunyi.cn](https://caoxunyi.cn/)
 
-**错误信息：**
-```
-Refused to apply style from 'http://localhost:63342/css/video.css' 
-because its MIME type ('text/html') is not a supported stylesheet MIME type
-```
+## 📝 License
 
-**原因：** CSS文件路径错误，服务器返回404页面（HTML格式），导致MIME类型不匹配
+本项目仅供学习交流使用，图片版权归原作者所有。
 
-**解决方案：** 修正CSS路径
-```html
-<!-- 错误 -->
-<link rel="stylesheet" href="/css/video.css">
+---
 
-<!-- 正确 -->
-<link rel="stylesheet" href="static/css/video.css">
-```
-
-### 问题2: 视频type属性错误
-
-**原因：** video标签的type属性应该是MIME类型，不是文件名
-
-**解决方案：**
-```html
-<!-- 错误 -->
-<source src="..." type="作为谢礼的冰淇淋-初音未来">
-
-<!-- 正确 -->
-<source src="..." type="video/mp4">
-```
-
-### 问题3: 视频尺寸过大显示不全
-
-**需求：** 既要填充整个屏幕（作为背景封面），又要保证内容可见
-
-**解决方案：** 
-- 使用 `object-fit: cover` 填充屏幕
-- 使用 `transform: translate(-50%, -50%)` 配合 `top: 50%; left: 50%` 确保居中
-- 使用 `object-position: center` 保证视频中心部分始终可见
-
-## 使用方法
-
-1. 将视频文件放置在 `static/images/video/` 目录下
-2. 在 `index.html` 中引用视频文件
-3. 使用本地服务器打开项目（不要直接打开HTML文件）
-4. 在视频上方添加其他内容时，确保z-index大于-100
-
-## 扩展建议
-
-如果需要在视频背景上添加内容，可以这样做：
-
-```html
-<body>
-    <video autoplay muted loop playsinline class="bg-video">
-        <source src="static/images/video/作为谢礼的冰淇淋-初音未来1.mp4" type="video/mp4">
-    </video>
-    
-    <!-- 在视频上方的内容 -->
-    <div class="content">
-        <h1>欢迎来到 Mikuweb</h1>
-        <p>你的内容在这里</p>
-    </div>
-</body>
-```
-
-```css
-.content {
-    position: relative;
-    z-index: 1;
-    color: white;
-    text-align: center;
-    padding-top: 20vh;
-}
-```
-
-## 浏览器兼容性
-
-- ✅ Chrome/Edge (现代版本)
-- ✅ Firefox (现代版本)
-- ✅ Safari (包括iOS)
-- ✅ 移动端浏览器
-
-**注意：** 某些移动设备可能会限制自动播放，需要用户交互后才能播放。
-
-## License
-
-本项目仅供学习使用。
-
+<p align="center">
+  Made with 💚 & ⚡ by <a href="https://github.com/awkker">awkker</a>
+</p>
