@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS 风格弹窗动画</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background: url('https://images.unsplash.com/photo-1490730141103-6cac27aaab94?q=80&w=2940&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 触发按钮 */
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.96); }
+
+        /* ================= 核心动画样式 ================= */
+
+        /* 1. 遮罩层 (Overlay) */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.2); /* 稍微暗一点 */
+            backdrop-filter: blur(0px); /* 初始不模糊 */
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease; /* 背景过渡平滑一点 */
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 遮罩层激活状态 */
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+            backdrop-filter: blur(8px); /* 激活时产生毛玻璃效果 */
+        }
+
+        /* 2. 弹窗本体 (Modal) */
+        .modal {
+            background: rgba(255, 255, 255, 0.85); /* 半透明白色 */
+            width: 400px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); /* 巨大的柔和阴影 */
+            text-align: center;
+
+            /* 初始状态：稍微缩小，且透明 */
+            transform: scale(0.8);
+            opacity: 0;
+
+            /* 🌟 核心魔法：transition 定义 */
+            /* 这里的 cubic-bezier 就是弹性的来源 */
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+            opacity 0.3s ease;
+        }
+
+        /* 弹窗激活状态 */
+        .overlay.active .modal {
+            transform: scale(1); /* 恢复正常大小 */
+            opacity: 1;
+        }
+
+        /* 弹窗内部样式 */
+        h2 { margin-top: 0; color: #333; }
+        p { color: #666; line-height: 1.5; }
+        .close-btn {
+            background: #007aff;
+            color: white;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<button onclick="openModal()">✨ 打开 macOS 弹窗</button>
+
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+        <h2>Ciallo～(∠・ω< )⌒★</h2>
+        <p>这个弹窗是不是有一种Q弹的感觉？<br>秘密在于 CSS 的 cubic-bezier 曲线。</p>
+        <button class="close-btn" onclick="closeModal()">关掉它</button>
+    </div>
+</div>
+
+<script>
+    const overlay = document.getElementById('overlay');
+
+    function openModal() {
+        overlay.classList.add('active');
+    }
+
+    function closeModal() {
+        overlay.classList.remove('active');
+    }
+</script>
+</body>
+</html>

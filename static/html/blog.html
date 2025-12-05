@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>旭酱老师作品集 - Mikuweb</title>
+    <link rel="stylesheet" href="../css/colors.css">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/mouse.css">
+    <link rel="stylesheet" href="../css/blog-layout/index.css">
+    <link rel="stylesheet" href="../css/sakura.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.0/github-markdown-light.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <style>
+        body {
+            background-image: url('../images/picture/author/ui.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏会由navbar.js自动创建 -->
+    
+    <!-- 页面主要内容区域 -->
+    <main class="main-content">
+        <!-- 博客布局容器 -->
+        <div class="blog-wrapper">
+            
+            <!-- 左侧：文章/作品列表 -->
+            <div class="article-list">
+                
+                <!-- 作品卡片 1 (使用 data-md 指定 markdown 文件路径) -->
+                <div class="article-card" data-id="1" data-md="../../README.md">
+                    <div class="article-info">
+                        <h2 class="article-title">Mikuweb正式上线</h2>
+                        <p class="article-excerpt">
+                            致力于构建最美的二次元画廊
+                        </p>
+                    </div>
+                    <div class="article-cover">
+                        <img src="../images/picture/作为谢礼的冰淇淋-初音未来1_0001.jpg" alt="Mikuweb正式上线">
+                    </div>
+                </div>
+
+                <div class="article-card" data-id="1" data-md="../../md/桌宠.md">
+                    <div class="article-info">
+                        <h2 class="article-title">live2d-widget 保姆级教程</h2>
+                        <p class="article-excerpt">
+                            保姆级教程，教你如何使用live2d-widget
+                        </p>
+                    </div>
+                    <div class="article-cover">
+                        <img src="../images/picture/blog/b1.jpeg" alt="live2d-widget 保姆级教程">
+                    </div>
+                </div>
+
+                <div class="article-card" data-id="1" data-md="../../md/pixiv.md">
+                    <div class="article-info">
+                        <h2 class="article-title">手搓一个类似 Pixiv 的响应式瀑布流画廊 </h2>
+                        <p class="article-excerpt">
+                            手搓一个类似 Pixiv 的响应式瀑布流画廊
+                        </p>
+                    </div>
+                    <div class="article-cover">
+                        <img src="../images/picture/blog/b2.jpg" alt="手搓一个类似 Pixiv 的响应式瀑布流画廊">
+                    </div>
+                </div>
+
+                <div class="article-card" data-id="1" data-md="../../md/mac.md">
+                    <div class="article-info">
+                        <h2 class="article-title">纯 CSS 复刻 macOS 丝滑弹窗：让你的网页拥有「物理质感」</h2>
+                        <p class="article-excerpt">
+                            纯 CSS 复刻 macOS 丝滑弹窗：让你的网页拥有「物理质感」
+                        </p>
+                    </div>
+                    <div class="article-cover">
+                        <img src="../images/picture/blog/b3.jpg" alt="纯 CSS 复刻 macOS 丝滑弹窗：让你的网页拥有「物理质感」">
+                    </div>
+                </div>
+                
+            </div>
+            <!-- 右侧：作者信息卡片 -->
+            <aside class="author-sidebar">
+                <div class="author-card">
+                    <div class="author-avatar">
+                        <img src="../images/picture/author/xunyi.png" alt="曹薰逸">
+                    </div>
+                    <div class="author-info-wrapper">
+                        <h3 class="author-name">曹薰逸</h3>
+                        <p class="author-bio">
+                            World is Mine | 致力于构建最美的二次元画廊
+                        </p>
+                        
+                        <div class="author-links">
+                            <a href="https://github.com/awkker" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                            <a href="https://space.bilibili.com/472356194?spm_id_from=333.1007.0.0" target="_blank" title="Bilibili"><i class="fa-brands fa-bilibili"></i></a>
+                            <a href="https://mail.126.com/list/chw0536@126.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+        </div>
+    </main>
+
+    <!-- 文章详情弹窗 -->
+    <div class="article-modal" id="articleModal">
+        <span class="modal-close">&times;</span>
+        <div class="modal-content">
+            <div class="modal-image">
+                <img src="" alt="" id="modalImg">
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle">作品标题</h2>
+                <!-- 普通文本模式（无 data-md 时使用） -->
+                <div class="modal-text" id="modalText"></div>
+                <!-- Markdown 渲染模式（有 data-md 时使用） -->
+                <div id="content" class="markdown-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cursor-follower" id="cursor"></div>
+    
+    <!-- JavaScript -->
+    <!-- Markdown 渲染依赖（如果不需要 md 功能可以移除） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- 核心脚本 -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/mouse.js"></script>
+    <script src="../js/blog-layout.js"></script>
+    <script src="../js/sakura.js"></script>
+</body>
+</html>

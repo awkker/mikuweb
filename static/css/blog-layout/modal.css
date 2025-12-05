@@ -1,67 +1,88 @@
 /* 博客布局 - 文章详情弹窗 */
 
+/* ========== 弹窗遮罩层 ========== */
+/* 全屏半透明黑色背景 + 毛玻璃效果 */
 .article-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    display: none;
+    background: rgba(0, 0, 0, 0.2);    /* 半透明黑色背景 */
+    backdrop-filter: blur(0px);        /* 初始不模糊 */
+    display: flex;                     /* 始终保持 flex（用 visibility 控制显隐） */
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 10000;                    /* 置于最顶层 */
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;                /* 用 visibility 隐藏（支持过渡） */
+    transition: all 0.3s ease;         /* 背景、模糊、透明度同时过渡 */
     padding: 40px 20px;
-    overflow-y: auto;
+    overflow-y: auto;                  /* 内容过长时可滚动 */
 }
 
+/* 遮罩层激活状态 */
 .article-modal.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(8px);        /* 激活时产生毛玻璃效果 */
 }
 
+/* ========== 弹窗内容容器 ========== */
+/* 白色卡片式容器 */
 .modal-content {
     background: #fff;
-    border-radius: 20px;
-    max-width: 800px;
+    border-radius: 20px;               /* 圆角 */
+    max-width: 1000px;                  /* 最大宽度 */
     width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    transform: scale(0.95);
-    transition: transform 0.3s ease;
+    max-height: 90vh;                  /* 最大高度为视口的90% */
+    overflow-y: auto;                  /* 内容过长时可滚动 */
+    /* 初始状态：稍微缩小，且透明 */
+    transform: scale(0.8);
+    opacity: 0;
+
+    /* 🌟 核心魔法：transition 定义 */
+    /* 这里的 cubic-bezier 就是弹性的来源 */
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.3s ease;
 }
 
+/* 弹窗激活时内容放大到正常大小，并显示出来 */
 .article-modal.active .modal-content {
     transform: scale(1);
+    opacity: 1;              /* ← 别忘了这个！ */
 }
 
+/* ========== 弹窗图片区域 ========== */
+/* 顶部大图展示 */
 .modal-image {
     width: 100%;
-    border-radius: 20px 20px 0 0;
+    border-radius: 20px 20px 0 0;      /* 只有顶部圆角 */
 }
 
 .modal-image img {
     width: 100%;
-    display: block;
+    display: block;                    /* 消除图片底部间隙 */
 }
 
+/* ========== 弹窗正文区域 ========== */
+/* 图片下方的内容区 */
 .modal-body {
     padding: 32px 40px 40px;
 }
 
+/* 弹窗标题 */
 .modal-title {
     font-size: 1.6rem;
     font-weight: 700;
     color: #333;
     margin: 0 0 20px 0;
     padding-bottom: 16px;
-    border-bottom: 2px solid var(--miku-color, #39c5bb);
+    border-bottom: 2px solid var(--miku-color, #39c5bb);  /* Miku绿下划线 */
     display: inline-block;
 }
 
+/* 弹窗元信息（分类、日期等） */
 .modal-meta {
     display: flex;
     gap: 20px;
@@ -70,19 +91,22 @@
     margin-bottom: 24px;
 }
 
+/* 弹窗正文内容（普通文本模式） */
 .modal-text {
     color: #555;
     font-size: 1.05rem;
-    line-height: 2;
-    white-space: pre-line;
-    text-align: justify;
-    letter-spacing: 0.02em;
+    line-height: 2;                    /* 2倍行高，阅读舒适 */
+    white-space: pre-line;             /* 保留换行符 */
+    text-align: justify;               /* 两端对齐 */
+    letter-spacing: 0.02em;            /* 微调字间距 */
 }
 
 .modal-text::first-line {
-    text-indent: 0;
+    text-indent: 0;                    /* 首行不缩进 */
 }
 
+/* ========== 关闭按钮 ========== */
+/* 右上角的 × 按钮 */
 .modal-close {
     position: fixed;
     top: 30px;
@@ -90,11 +114,11 @@
     color: #fff;
     font-size: 36px;
     cursor: pointer;
-    z-index: 10001;
+    z-index: 10001;                    /* 比弹窗更高 */
     transition: transform 0.3s ease;
 }
 
+/* 悬停旋转效果 */
 .modal-close:hover {
     transform: rotate(90deg);
 }
-

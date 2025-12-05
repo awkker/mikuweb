@@ -132,3 +132,58 @@ a.text-link:hover { text-decoration: underline; }
     .profile-header { flex-direction: column; text-align: center; }
     .grid-cards { grid-template-columns: 1fr; }
 }
+
+/* ========== 深色模式 ========== */
+body.dark-mode {
+    --text-main: #e0e0e0;
+    --text-sub: #a0a0a0;
+    --bg-glass: rgba(30, 30, 30, 0.92);
+    --border-color: #3d3d3d;
+}
+
+body.dark-mode .main-container {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .avatar {
+    border-color: #444;
+    box-shadow: 0 4px 12px rgba(57, 197, 187, 0.2);
+}
+
+body.dark-mode .profile-info h1 {
+    color: #f0f0f0;
+}
+
+body.dark-mode h2 {
+    color: #e0e0e0;
+}
+
+body.dark-mode h2 i {
+    color: #888;
+}
+
+body.dark-mode .card {
+    background: #2a2a2a;
+    border-color: #3d3d3d;
+}
+
+body.dark-mode .card:hover {
+    border-color: var(--miku-teal);
+    box-shadow: 0 4px 12px rgba(57, 197, 187, 0.15);
+}
+
+body.dark-mode .card-title {
+    color: #5dd3c8;
+}
+
+body.dark-mode .social-links a {
+    color: #a0a0a0;
+}
+
+body.dark-mode .social-links a:hover {
+    color: #5dd3c8;
+}
+
+body.dark-mode a.text-link {
+    color: #5dd3c8;
+}

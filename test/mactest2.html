@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿 macOS 神灯吸入效果</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?q=80&w=2940&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        /* --- 模拟的 Dock 栏 --- */
+        .dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 10px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .dock-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .dock-icon:hover { transform: scale(1.1) translateY(-5px); }
+
+        /* 标记这是目标的 icon */
+        #target-icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+        /* 标记 icon 下方的小黑点 (表示运行中) */
+        #target-icon::after {
+            content: ''; display: block; width: 4px; height: 4px; background: rgba(255,255,255,0.6);
+            border-radius: 50%; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+        }
+
+        /* --- 可拖拽的窗口 --- */
+        #window {
+            width: 400px;
+            height: 300px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: absolute;
+            top: 20%; left: 30%; /* 初始位置 */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+
+            /* 🌟 核心：为动画做准备 */
+            transition: transform 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+            opacity 0.6s ease;
+            /* 这一句 cubic-bezier 是模拟“越吸越快”的重力感 */
+        }
+
+        /* 窗口标题栏 */
+        .title-bar {
+            height: 36px;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            cursor: grab; /* 抓手光标 */
+        }
+        .title-bar:active { cursor: grabbing; }
+
+        /* 红绿灯按钮 */
+        .traffic-lights { display: flex; gap: 6px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; cursor: pointer; } /* 黄色最小化 */
+        .maximize { background: #27c93f; }
+
+        .content {
+            padding: 20px;
+            flex: 1;
+            color: #333;
+        }
+
+        /* --- 最小化状态 (被吸入) --- */
+        .sucked-in {
+            /* 1. 变成全透明 */
+            opacity: 0;
+            /* 2. 这里的 transform 会结合 JS 动态计算的 origin 生效 */
+            transform: scale(0) translateY(200px);
+            /* 注意：translateY 是为了让它有一种向下流动的趋势 */
+        }
+    </style>
+</head>
+<body>
+
+<div id="window">
+    <div class="title-bar" id="drag-handle">
+        <div class="traffic-lights">
+            <div class="dot close"></div>
+            <div class="dot minimize" onclick="suckWindow()"></div> <div class="dot maximize"></div>
+        </div>
+    </div>
+    <div class="content">
+        <h2>Genie Effect 🧞‍♂️</h2>
+        <p>点击上方黄色的按钮，看看我会去哪里！</p>
+        <p>还可以拖动我换个位置再试哦。</p>
+    </div>
+</div>
+
+<div class="dock">
+    <div class="dock-icon"></div>
+    <div class="dock-icon"></div>
+    <div class="dock-icon" id="target-icon" onclick="restoreWindow()"></div> <div class="dock-icon"></div>
+</div>
+
+<script>
+    const win = document.getElementById('window');
+    const targetIcon = document.getElementById('target-icon');
+    let isMinimized = false;
+
+    // --- 核心功能：神灯吸入 ---
+    function suckWindow() {
+        if (isMinimized) return;
+
+        // 1. 获取窗口和图标的位置信息 (getBoundingClientRect 是神器)
+        const winRect = win.getBoundingClientRect();
+        const iconRect = targetIcon.getBoundingClientRect();
+
+        // 2. 计算图标中心点相对于窗口左上角的坐标
+        // 这是为了确定 transform-origin (变形支点) 应该在哪里
+        const iconCenterX = iconRect.left + iconRect.width / 2;
+        const iconCenterY = iconRect.top + iconRect.height / 2;
+
+        // 3. 计算相对位移
+        // 我们需要把变换原点设置到 Dock 图标的位置。
+        // 也就是：图标中心X - 窗口当前X
+        const originX = iconCenterX - winRect.left;
+        const originY = iconCenterY - winRect.top;
+
+        // 4. 应用样式
+        // 这一步是魔法的关键：动态改变原点！
+        win.style.transformOrigin = `${originX}px ${originY}px`;
+
+        // 5. 触发动画
+        win.classList.add('sucked-in');
+        isMinimized = true;
+    }
+
+    // --- 恢复窗口 ---
+    function restoreWindow() {
+        if (!isMinimized) return;
+        win.classList.remove('sucked-in');
+        isMinimized = false;
+    }
+
+    // --- 附赠：简单的拖拽逻辑 (为了测试不同位置的吸入) ---
+    const handle = document.getElementById('drag-handle');
+    let isDragging = false;
+    let startX, startY, initialLeft, initialTop;
+
+    handle.addEventListener('mousedown', (e) => {
+        if (isMinimized) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = win.offsetLeft;
+        initialTop = win.offsetTop;
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMove(e) {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        win.style.left = `${initialLeft + dx}px`;
+        win.style.top = `${initialTop + dy}px`;
+    }
+
+    function onMouseUp() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+    }
+</script>
+</body>
+</html>

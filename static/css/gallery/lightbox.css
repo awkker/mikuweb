@@ -1,39 +1,51 @@
 /* 画廊 - Lightbox 大图弹窗 */
 
+/* ========== 弹窗遮罩层 ========== */
 .lightbox {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(8px);
-    display: none;
+    background: rgba(0, 0, 0, 0.4);     /* 半透明黑色背景 */
+    backdrop-filter: blur(0px);         /* 初始不模糊 */
+    display: flex;                      /* 始终保持 flex（用 visibility 控制显隐） */
     justify-content: center;
     align-items: center;
     z-index: 10000;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    visibility: hidden;                 /* 用 visibility 隐藏（支持过渡） */
+    transition: all 0.3s ease;          /* 背景、模糊、透明度同时过渡 */
 }
 
+/* 遮罩层激活状态 */
 .lightbox.active {
-    display: flex;
     opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(8px);         /* 激活时产生毛玻璃效果 */
 }
 
+/* ========== 图片容器 ========== */
 .lightbox img {
     max-width: 90%;
     max-height: 90%;
     border-radius: 8px;
-    box-shadow: 0 0 20px rgba(57, 197, 187, 0.5);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+    box-shadow: 0 0 20px rgba(57, 197, 187, 0.5);  /* Miku绿光晕 */
+    /* 初始状态：缩小且透明 */
+    transform: scale(0.8);
+    opacity: 0;
+    /* 🌟 弹性动画曲线 */
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                opacity 0.3s ease;
 }
 
+/* 图片激活状态 */
 .lightbox.active img {
     transform: scale(1);
+    opacity: 1;
 }
 
+/* ========== 关闭按钮 ========== */
 .close-btn {
     position: absolute;
     top: 30px;
@@ -49,4 +61,3 @@
     transform: rotate(90deg);
     color: var(--miku-color);
 }
-

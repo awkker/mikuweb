@@ -91,13 +91,8 @@ function createNavbar() {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#history" class="nav-link">
-                                <span class="nav-text">建站历程</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#contact" class="nav-link">
-                                <span class="nav-text">联系方式</span>
+                            <a href="../html/blog.html" class="nav-link">
+                                <span class="nav-text">博客</span>
                             </a>
                         </li>
                     </ul>
