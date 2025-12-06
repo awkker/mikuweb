@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miku画廊 - 创作中心</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #39c5bb;
+            --primary-hover: #2daaa0;
+            --bg: #f0f2f5;
+            --border: #e1e4e8;
+        }
+
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); height: 100vh; display: flex; flex-direction: column; }
+
+        .navbar {
+            background: white; padding: 0 2rem; height: 60px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;
+        }
+        .brand { font-weight: bold; font-size: 1.2rem; color: #333; display: flex; align-items: center; gap: 10px; }
+        .brand span { color: var(--primary); }
+        .actions { display: flex; gap: 1rem; }
+        
+        .btn { padding: 8px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.9rem; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: transparent; border: 1px solid #ff6b6b; color: #ff6b6b; }
+        .btn-outline:hover { background: #fff0f0; }
+
+        .main-container { flex: 1; display: flex; padding: 20px; gap: 20px; overflow: hidden; transition: all 0.3s ease; }
+        
+        /* 编辑器区域 */
+        .editor-pane { 
+            flex: 1; /* 默认占据一半空间，或者在预览隐藏时自动撑满 */
+            display: flex; flex-direction: column; background: white; border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); overflow: hidden; 
+            transition: all 0.3s ease; /* 增加顺滑的过渡动画 */
+        }
+        
+        .meta-inputs { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .input-group input { width: 100%; border: none; outline: none; font-size: 1rem; padding: 8px 0; border-bottom: 2px solid transparent; transition: 0.3s; }
+        .input-group input:focus { border-bottom-color: var(--primary); }
+        #title { font-size: 1.5rem; font-weight: bold; color: #333; }
+        #summary { color: #666; font-size: 0.95rem; }
+
+        /* 工具栏 */
+        .toolbar { padding: 8px 15px; background: #fafbfc; border-bottom: 1px solid var(--border); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .tool-btn { 
+            width: 32px; height: 32px; border: none; background: transparent; border-radius: 4px; 
+            color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .tool-btn:hover { background: #e1e4e8; color: var(--primary); }
+        .tool-separator { width: 1px; height: 20px; background: #ddd; margin: 0 5px; }
+
+        /* 特殊：把眼睛放到最右边 */
+        .toolbar-right { margin-left: auto; } 
+        /* 眼睛激活状态（比如斜杠眼）的颜色 */
+        .tool-btn.active { color: var(--primary); background: #e6fffc; }
+
+        .editor-wrapper { flex: 1; position: relative; }
+        textarea { 
+            width: 100%; height: 100%; border: none; resize: none; outline: none; padding: 20px; 
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace; font-size: 15px; line-height: 1.6; color: #333;
+            box-sizing: border-box; background: white;
+        }
+
+        /* 预览区域 */
+        .preview-pane { 
+            flex: 1; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            padding: 40px; overflow-y: auto; 
+            transition: all 0.3s ease;
+        }
+        
+        /* 隐藏预览时的样式类 */
+        .preview-hidden .preview-pane {
+            display: none; /* 彻底隐藏 */
+            flex: 0;
+        }
+        
+        /* 1. 当预览隐藏时，让整个编辑器卡片居中，并限制宽度 */
+        .preview-hidden .editor-pane {
+            flex: initial;       /* 取消 flex:1 自动撑满 */
+            width: 100%;         /* 默认占满 */
+            max-width: 850px;    /* 限制最大宽度 (类似 A4 纸宽度) */
+            margin: 0 auto;      /* 左右自动留白居中 */
+            height: 100%;        /* 高度保持撑满 */
+            border-right: none;  /* 去掉可能存在的边框 */
+        }
+
+        /* 2. 隐藏预览区 */
+        .preview-hidden .preview-pane {
+            display: none;
+        }
+
+        /* 3. 让输入框在专注模式下也有合适的内边距 */
+        .preview-hidden .editor-wrapper textarea {
+            padding: 30px 50px; /* 增加左右留白，让文字呼吸感更强 */
+            font-size: 16px;    /* 专注模式下字体稍微大一点点，更舒服 */
+        }   
+
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; overflow-y: auto; }
+            .preview-pane { display: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (!localStorage.getItem('blog_token')) window.location.href = 'login.html';
+    </script>
+
+    <div class="navbar">
+        <div class="brand">
+            <i class="fa-solid fa-pen-nib" style="color:var(--primary)"></i>
+            Miku<span>Gallery</span> Writer
+        </div>
+        <div class="actions">
+            <button class="btn btn-outline" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> 退出
+            </button>
+            <button class="btn btn-primary" onclick="publish()" id="publishBtn">
+                <i class="fa-solid fa-paper-plane"></i> 发布文章
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container" id="mainContainer">
+        
+        <div class="editor-pane">
+            <div class="meta-inputs">
+                <div class="input-group">
+                    <input type="text" id="title" placeholder="请输入文章标题..." autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="summary" placeholder="一句话摘要..." autocomplete="off">
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <button class="tool-btn" onclick="insertMD('**', '**')" title="加粗"><i class="fa-solid fa-bold"></i></button>
+                <button class="tool-btn" onclick="insertMD('*', '*')" title="斜体"><i class="fa-solid fa-italic"></i></button>
+                <button class="tool-btn" onclick="insertMD('## ', '')" title="二级标题"><i class="fa-solid fa-heading"></i></button>
+                <div class="tool-separator"></div>
+                <button class="tool-btn" onclick="insertMD('> ', '')" title="引用"><i class="fa-solid fa-quote-left"></i></button>
+                <button class="tool-btn" onclick="insertMD('- ', '')" title="无序列表"><i class="fa-solid fa-list-ul"></i></button>
+                <button class="tool-btn" onclick="insertMD('1. ', '')" title="有序列表"><i class="fa-solid fa-list-ol"></i></button>
+                <div class="tool-separator"></div>
+                <button class="tool-btn" onclick="insertMD('[', '](url)')" title="链接"><i class="fa-solid fa-link"></i></button>
+                <button class="tool-btn" onclick="insertMD('![图片描述](', ')')" title="图片"><i class="fa-regular fa-image"></i></button>
+                <button class="tool-btn" onclick="insertMD('```\n', '\n```')" title="代码块"><i class="fa-solid fa-code"></i></button>
+
+                <div class="toolbar-right">
+                    <button class="tool-btn" onclick="togglePreview()" id="eyeBtn" title="切换预览 (Toggle Preview)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-wrapper">
+                <textarea id="content" placeholder="开始你的创作... (支持 Markdown 语法)"></textarea>
+            </div>
+        </div>
+
+        <div class="preview-pane markdown-body" id="preview">
+            <div style="color:#aaa; text-align:center; margin-top:20px;">
+                此处将实时显示预览效果...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:8080/admin/posts";
+        const editor = document.getElementById('content');
+        const preview = document.getElementById('preview');
+        const container = document.getElementById('mainContainer');
+        const eyeBtn = document.getElementById('eyeBtn');
+        const eyeIcon = eyeBtn.querySelector('i');
+
+        // --- 功能: 切换预览 ---
+        let isPreviewOn = true;
+
+        function togglePreview() {
+            isPreviewOn = !isPreviewOn;
+            
+            if (isPreviewOn) {
+                // 打开预览
+                container.classList.remove('preview-hidden');
+                eyeIcon.className = 'fa-solid fa-eye';
+                eyeBtn.classList.remove('active');
+                // 重新渲染一次，防止这期间内容变了但预览没刷新的情况
+                preview.innerHTML = marked.parse(editor.value);
+            } else {
+                // 关闭预览
+                container.classList.add('preview-hidden');
+                eyeIcon.className = 'fa-solid fa-eye-slash'; // 变成斜杠眼
+                eyeBtn.classList.add('active'); // 按钮变色提示状态
+            }
+        }
+
+        // --- 核心功能: 实时渲染 ---
+        editor.addEventListener('input', () => {
+            // 只有当预览开启时才进行转换，节省性能
+            if (isPreviewOn) {
+                preview.innerHTML = marked.parse(editor.value || '此处将实时显示预览效果...');
+            }
+        });
+
+        // --- 工具栏插入逻辑 ---
+        function insertMD(prefix, suffix) {
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const selection = text.substring(start, end);
+
+            const newText = text.substring(0, start) + prefix + selection + suffix + text.substring(end);
+            editor.value = newText;
+            editor.focus();
+            editor.setSelectionRange(start + prefix.length, end + prefix.length);
+            
+            // 手动触发 input 事件更新预览
+            editor.dispatchEvent(new Event('input'));
+        }
+
+        // --- 发布文章 ---
+        async function publish() {
+            const btn = document.getElementById('publishBtn');
+            const token = localStorage.getItem('blog_token');
+            
+            const data = {
+                title: document.getElementById('title').value,
+                summary: document.getElementById('summary').value,
+                content: editor.value
+            };
+
+            if(!data.title || !data.content) {
+                alert('标题和正文不能为空哦！');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 发布中...';
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    alert('✨ 发布成功！');
+                    document.getElementById('title').value = '';
+                    document.getElementById('summary').value = '';
+                    editor.value = '';
+                    preview.innerHTML = '';
+                } else if (res.status === 401) {
+                    alert('❌ 身份过期，请重新登录');
+                    logout();
+                } else {
+                    alert('❌ 发布失败');
+                }
+            } catch (err) {
+                alert('❌ 网络错误');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 发布文章';
+            }
+        }
+
+        function logout() {
+            if(confirm('Ciallo～ 确定要退出吗？')) {
+                localStorage.removeItem('blog_token');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
