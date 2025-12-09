@@ -4,7 +4,6 @@
 body {
     overflow-x: hidden;
     overflow-y: auto !important; /* 强制允许纵向滚动，覆盖其他CSS的overflow: hidden */
-    transition: all 0.3s ease;
     margin: 0;
     padding: 0;
 }

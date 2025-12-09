@@ -18,7 +18,7 @@ const ap = new APlayer({
             artist: 'ryo (supercell) / 初音ミク',
             url: '../images/music/ryo (supercell),初音ミク - ODDS&ENDS_副本.mp3',
             cover: '../images/music/musicimage/ryo.jpg',
-            lrc: '../images/music/lrc/ODDS&ENDS.lrc.txt'
+            lrc: '../images/music/lrc/ODDS&ENDS.lrc'
         },
         {
             name: 'からくりピエロ',

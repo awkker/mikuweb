@@ -79,11 +79,33 @@ body.dark-mode .form-textarea::placeholder {
     color: #666;
 }
 
-body.dark-mode .emoji-btn {
+body.dark-mode .sticker-toggle-btn {
+    background: rgba(50, 50, 50, 0.9);
+    border-color: rgba(150, 100, 100, 0.3);
+    color: #aaa;
+}
+
+body.dark-mode .sticker-toggle-btn:hover {
+    border-color: rgba(200, 130, 130, 0.5);
+    background: rgba(200, 130, 130, 0.1);
+}
+
+body.dark-mode .sticker-toggle-btn.active {
+    background: rgba(200, 130, 130, 0.2);
+    border-color: rgba(200, 130, 130, 0.5);
+    color: #d4918f;
+}
+
+body.dark-mode .emoji-picker {
+    background: rgba(40, 40, 40, 0.95);
+    border-color: rgba(150, 100, 100, 0.2);
+}
+
+body.dark-mode .sticker-btn {
     background: rgba(60, 60, 60, 0.8);
 }
 
-body.dark-mode .emoji-btn:hover {
+body.dark-mode .sticker-btn:hover {
     background: rgba(200, 130, 130, 0.3);
 }
 

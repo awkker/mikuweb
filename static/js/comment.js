@@ -12,31 +12,59 @@
     // 博主标识（可以根据实际情况配置）
     const AUTHOR_NICKNAME = 'awkker';
 
-    // 表情列表
-    const EMOJI_LIST = [
-        '😊', '😂', '🥰', '😍', '🤔', '😅', '😢', '😭',
-        '👍', '👏', '❤️', '🎉', '✨', '🌸', '🎵', '☕'
-    ];
+    // 表情包配置
+    // key 是插入文本框的代号，val 是文件名
+    const STICKER_BASE_URL = '../images/gif/';
+    const STICKER_MAP ={
+        'aaa': 'aaa.gif',
+        'baojing': 'baojing.gif',
+        'bixin': 'bixin.gif',
+        'chigua': 'chigua.gif',
+        'chong': 'chong.gif',
+        'haixiu': 'haixiu.gif',
+        'jibiji': 'jibiji.gif',
+        'jingya': 'jingya.gif',
+        'kelian': 'kelian.gif',
+        'kuaipao': 'kuaipao.gif',
+        'loutou': 'loutou.gif',
+        'momo': 'momo.gif',
+        'nienie': 'nienie.gif',
+        'no': 'no.gif',
+        'ok': 'ok.gif',
+        'qihuhu': 'qihuhu.gif',
+        'rose': 'rose.gif',
+        'rua': 'rua.gif',
+        'shijian':'shijian.gif',
+        'sikao':'sikao.gif',
+        'sleep':'sleep.gif',
+        'tian':'tian.gif',
+        'tietie':'tietie.gif',
+        'wofule':'wofule.gif',
+        'zakozako':'zakozako.gif',
+    }
 
-    // 浏览器图标映射
+    const iconHtml = (name) => 
+        `<img src="https://api.iconify.design/logos:${name}.svg" class="meta-icon" alt="${name}">`;
+
+    // 浏览器图标映射 
     const BROWSER_ICONS = {
-        'chrome': '🌐',
-        'firefox': '🦊',
-        'safari': '🧭',
-        'edge': '🌊',
-        'opera': '🔴',
-        'ie': '📘',
-        'default': '🌐'
+        'chrome':  iconHtml('chrome'),
+        'firefox': iconHtml('firefox'),
+        'safari':  iconHtml('safari'),
+        'edge':    iconHtml('microsoft-edge'), 
+        'opera':   iconHtml('opera'),
+        'ie':      iconHtml('internet-explorer'),
+        'default': '🌐' // 未知浏览器
     };
 
-    // 系统图标映射
+    // 系统图标映射 
     const OS_ICONS = {
-        'windows': '🪟',
-        'mac': '🍎',
-        'linux': '🐧',
-        'android': '🤖',
-        'ios': '📱',
-        'default': '💻'
+        'windows':     iconHtml('microsoft-windows'), 
+        'mac':         iconHtml('apple'),             
+        'linux':       iconHtml('linux-tux'),         
+        'android':     iconHtml('android-icon'),      
+        'ios':         iconHtml('apple'),            
+        'default':     '💻'// 未知系统
     };
 
     /**
@@ -140,7 +168,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="comment-content">${escapeHtml(comment.content)}</div>
+                    <div class="comment-content">${renderStickers(comment.content)}</div>
                 </div>
             </div>
         `;
@@ -154,6 +182,24 @@
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    /**
+     * 将评论内容中的表情代码转换为图片
+     * 格式: [表情名] -> <img src="...">
+     */
+    function renderStickers(text) {
+        if (!text) return '';
+        // 先转义 HTML，防止 XSS
+        let html = escapeHtml(text);
+        // 替换表情代码为图片
+        html = html.replace(/\[([a-zA-Z0-9_]+)\]/g, (match, stickerName) => {
+            if (STICKER_MAP[stickerName]) {
+                return `<img class="comment-sticker" src="${STICKER_BASE_URL}${STICKER_MAP[stickerName]}" alt="[${stickerName}]" title="${stickerName}">`;
+            }
+            return match; // 不在表情列表中的保持原样
+        });
+        return html;
     }
 
     /**
@@ -303,30 +349,66 @@
     /**
      * 初始化表情选择器
      */
-    function initEmojiPicker() {
+    function initStickerPicker() {
         const pickerEl = document.getElementById('emoji-picker');
         const textarea = document.querySelector('textarea[name="content"]');
+        const toggleBtn = document.createElement('button');
         
         if (!pickerEl || !textarea) return;
         
-        pickerEl.innerHTML = EMOJI_LIST.map(emoji => 
-            `<button type="button" class="emoji-btn" data-emoji="${emoji}">${emoji}</button>`
+        // 创建表情按钮
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'sticker-toggle-btn';
+        toggleBtn.innerHTML = '表情';
+        toggleBtn.title = '插入表情';
+        
+        // 将按钮插入到表单操作区
+        const formActions = document.querySelector('.form-actions');
+        if (formActions) {
+            formActions.insertBefore(toggleBtn, formActions.firstChild);
+        }
+        
+        // 生成表情面板
+        pickerEl.innerHTML = Object.entries(STICKER_MAP).map(([name, file]) => 
+            `<button type="button" class="sticker-btn" data-sticker="${name}" title="${name}">
+                <img src="${STICKER_BASE_URL}${file}" alt="${name}">
+            </button>`
         ).join('');
         
+        // 默认隐藏面板
+        pickerEl.style.display = 'none';
+        
+        // 点击按钮切换面板显示
+        toggleBtn.addEventListener('click', () => {
+            const isVisible = pickerEl.style.display !== 'none';
+            pickerEl.style.display = isVisible ? 'none' : 'grid';
+            toggleBtn.classList.toggle('active', !isVisible);
+        });
+        
+        // 点击表情插入代码
         pickerEl.addEventListener('click', (e) => {
-            const btn = e.target.closest('.emoji-btn');
+            const btn = e.target.closest('.sticker-btn');
             if (!btn) return;
             
-            const emoji = btn.dataset.emoji;
+            const stickerName = btn.dataset.sticker;
+            const stickerCode = `[${stickerName}]`;
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
             const text = textarea.value;
             
-            textarea.value = text.substring(0, start) + emoji + text.substring(end);
+            textarea.value = text.substring(0, start) + stickerCode + text.substring(end);
             textarea.focus();
-            textarea.setSelectionRange(start + emoji.length, start + emoji.length);
+            textarea.setSelectionRange(start + stickerCode.length, start + stickerCode.length);
             
             updateCharCount(textarea);
+        });
+        
+        // 点击其他地方关闭面板
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.sticker-toggle-btn') && !e.target.closest('#emoji-picker')) {
+                pickerEl.style.display = 'none';
+                toggleBtn.classList.remove('active');
+            }
         });
     }
 
@@ -351,7 +433,7 @@
         }
         
         // 初始化表情选择器
-        initEmojiPicker();
+        initStickerPicker();
     }
 
     // 页面加载完成后初始化

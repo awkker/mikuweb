@@ -11,7 +11,7 @@
  /* --- 主容器：像一张A4纸一样浮在背景上 --- */
  .main-container {
     max-width: 900px; /* 类似 GitHub 宽屏时的内容宽度 */
-    margin: 60px auto;
+    margin: 100px auto 60px;
     background: var(--bg-glass);
     backdrop-filter: blur(8px); /* 毛玻璃 */
     border: 1px solid var(--border-color);
