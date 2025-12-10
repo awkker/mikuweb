@@ -17,7 +17,9 @@ import (
 //管理员
 const ADMIN_PASSWORD = "123456"
 //管理员昵称
-const ADMIN_NICKNAME = "admin"
+const ADMIN_NICKNAME = "awkker"
+//管理员头像
+const ADMIN_AVATAR = "../images/picture/author/xunyi.png"
 
 // 1. 升级 Model，增加元数据字段
 type Comment struct {
@@ -165,6 +167,28 @@ func main() {
 		}
 		c.JSON(200, post)
 	})
+
+	// 管理员登录
+	r.POST("/login", func(c *gin.Context) {
+        var input struct {
+            Password string `json:"password"`
+        }
+        if err := c.ShouldBindJSON(&input); err != nil {
+            c.JSON(400, gin.H{"error": "参数错误"})
+            return
+        }
+
+        // 验证密码 
+        if input.Password == ADMIN_PASSWORD {
+            c.JSON(200, gin.H{
+                "token":    ADMIN_PASSWORD, 
+                "nickname": ADMIN_NICKNAME, 
+                "avatar":   ADMIN_AVATAR, 
+            })
+        } else {
+            c.JSON(401, gin.H{"error": "密码错误喵！(>_<)"})
+        }
+    })
 
 	// ===========================
 	//    B. 管理员接口 (Admin Only)

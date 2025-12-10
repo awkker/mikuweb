@@ -1,0 +1,128 @@
+/* 全屏蒙层 (默认隐藏) */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3); /* 浅色遮罩 */
+    backdrop-filter: blur(8px);           /* 背景极其模糊，突出重点 */
+    z-index: 2000;                        /* 必须比导航栏还要高 */
+    display: none;                        /* JS 控制显示 */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* 显示时的状态 */
+.login-overlay.active {
+    opacity: 1;
+}
+
+/* 登录框本体 */
+.login-box {
+    width: 320px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 24px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Q弹的贝塞尔曲线 */
+}
+
+/* 激活时的弹跳动画 */
+.login-overlay.active .login-box {
+    transform: scale(1);
+}
+
+/* 关闭按钮 */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-btn:hover { color: #e8a0a0; }
+
+/* 内容区域 */
+.login-header h3 {
+    margin: 10px 0 5px;
+    color: #5da888;
+}
+.login-header p {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 20px;
+}
+.login-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid white;
+    box-shadow: 0 5px 15px rgba(129, 201, 169, 0.2);
+    margin-top: -50px; /* 让头像半浮在盒子外面 */
+    background: white;
+}
+
+/* 输入框 */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #81c9a9;
+}
+#login-password {
+    width: 100%;
+    padding: 12px 12px 12px 40px; /* 留出图标位置 */
+    border: 2px solid #f0f0f0;
+    border-radius: 50px;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box; /* 防止padding撑大 */
+    transition: all 0.3s;
+    background: #fcfcfc;
+}
+#login-password:focus {
+    border-color: #81c9a9;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(129, 201, 169, 0.1);
+}
+
+/* 按钮 */
+.login-submit-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #81c9a9 0%, #5da888 100%);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 2px;
+}
+.login-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(93, 168, 136, 0.3);
+}
+
+/* 错误时的抖动动画 */
+.shake {
+    animation: shake 0.5s;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}

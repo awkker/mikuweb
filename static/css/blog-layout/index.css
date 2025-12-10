@@ -4,7 +4,8 @@
 @import url('./layout.css');
 @import url('./article-card.css');
 @import url('./author-card.css');
-@import url('./modal.css');
+@import url('./modal.css');        /* 图文弹窗模式 */
+@import url('./blog-expand.css');  /* 博客文章展开模式 */
 @import url('./responsive.css');
 @import url('./dark-mode.css');
 

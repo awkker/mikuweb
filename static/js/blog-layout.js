@@ -1,16 +1,19 @@
-// 文章详情弹窗功能（支持 Markdown 渲染）
+// 博客布局功能
+// - 有 data-md 属性的卡片：瀑布式展开阅读
+// - 没有 data-md 属性的卡片：弹窗模式查看图文
+
 document.addEventListener('DOMContentLoaded', function() {
+    const blogWrapper = document.querySelector('.blog-wrapper');
     const modal = document.getElementById('articleModal');
     const modalImg = document.getElementById('modalImg');
     const modalTitle = document.getElementById('modalTitle');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalDate = document.getElementById('modalDate');
     const modalText = document.getElementById('modalText');
-    const modalContent = document.getElementById('content'); // markdown 容器
     const closeBtn = document.querySelector('.modal-close');
     
-    // 如果页面没有弹窗元素，不初始化
-    if (!modal) return;
+    let currentExpandedCard = null;
+    
+    // 如果没有博客容器，不初始化
+    if (!blogWrapper) return;
     
     /**
      * 加载并渲染 Markdown 文件
@@ -43,7 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 : dirtyHtml;
             
             // 渲染到页面
-            container.innerHTML = cleanHtml;
+            container.innerHTML = cleanHtml + `
+                <button class="article-collapse-btn" onclick="collapseArticle(event)">
+                    <i class="fa-solid fa-chevron-up"></i> 收起文章
+                </button>
+            `;
             
             // 代码高亮 (如果有 highlight.js)
             if (typeof hljs !== 'undefined') {
@@ -59,87 +66,219 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${error.message}<br><br>
                     <small>提示：请确保文件路径正确，且使用 HTTP 服务器运行。</small>
                 </div>
+                <button class="article-collapse-btn" onclick="collapseArticle(event)">
+                    <i class="fa-solid fa-chevron-up"></i> 收起文章
+                </button>
             `;
         }
     }
     
-    // 点击文章卡片打开详情
-    document.querySelectorAll('.article-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const img = this.querySelector('.article-cover img');
-            const titleEl = this.querySelector('.article-title');
-            const categoryEl = this.querySelector('.article-category');
-            const dateEl = this.querySelector('.article-date');
-            const excerptEl = this.querySelector('.article-excerpt');
-            const mdPath = this.dataset.md; // 获取 md 文件路径
-            
-            // 设置图片
-            if (img && modalImg) {
-                modalImg.src = img.src;
-            }
-            
-            // 设置标题
-            if (titleEl && modalTitle) {
-                modalTitle.textContent = titleEl.textContent;
-            }
-            
-            // 设置分类（可选）
-            if (modalCategory) {
-                if (categoryEl) {
-                    modalCategory.textContent = '📁 ' + categoryEl.textContent;
-                    modalCategory.style.display = '';
-                } else {
-                    modalCategory.style.display = 'none';
-                }
-            }
-            
-            // 设置日期（可选）
-            if (modalDate) {
-                if (dateEl) {
-                    modalDate.textContent = '📅 ' + dateEl.textContent;
-                    modalDate.style.display = '';
-                } else {
-                    modalDate.style.display = 'none';
-                }
-            }
-            
-            // 判断使用 Markdown 还是普通文本
-            if (mdPath && modalContent) {
-                // 有 md 路径，加载 markdown 文件
-                if (modalText) modalText.style.display = 'none';
-                modalContent.style.display = '';
-                loadMarkdown(mdPath, modalContent);
-            } else if (excerptEl) {
-                // 没有 md 路径，使用原有的摘要文本
-                if (modalContent) modalContent.style.display = 'none';
-                if (modalText) {
-                    modalText.style.display = '';
-                    modalText.textContent = excerptEl.textContent;
-                }
-            }
-            
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    });
+    // ========== 博客文章展开模式 ==========
     
-    // 关闭弹窗
-    const closeModal = () => {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
+    /**
+     * 展开文章卡片（有 data-md 的博客文章）
+     */
+    function expandArticle(card) {
+        // 如果点击的是已展开的卡片，不做任何事
+        if (card.classList.contains('expanded')) {
+            return;
+        }
+        
+        // 如果有其他卡片展开，先收起
+        if (currentExpandedCard && currentExpandedCard !== card) {
+            collapseArticleCard(currentExpandedCard);
+        }
+        
+        const mdPath = card.dataset.md;
+        let expandContent = card.querySelector('.article-expand-content');
+        
+        // 如果没有展开内容容器，创建一个
+        if (!expandContent) {
+            expandContent = document.createElement('div');
+            expandContent.className = 'article-expand-content';
+            expandContent.innerHTML = '<div class="markdown-body"></div>';
+            card.appendChild(expandContent);
+        }
+        
+        const markdownContainer = expandContent.querySelector('.markdown-body');
+        
+        // 添加展开状态
+        card.classList.add('expanded');
+        blogWrapper.classList.add('has-expanded');
+        currentExpandedCard = card;
+        
+        // 加载 Markdown 内容
+        if (mdPath && markdownContainer) {
+            loadMarkdown(mdPath, markdownContainer);
+        }
+        
+        // 平滑滚动到展开的卡片
+        setTimeout(() => {
+            card.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start'
+            });
+        }, 100);
+    }
+    
+    /**
+     * 收起文章卡片
+     */
+    function collapseArticleCard(card) {
+        if (!card) return;
+        
+        card.classList.remove('expanded');
+        
+        // 完全移除展开内容元素，确保布局恢复
+        const expandContent = card.querySelector('.article-expand-content');
+        if (expandContent) {
+            expandContent.remove();
+        }
+        
+        // 检查是否还有其他展开的卡片
+        const expandedCards = document.querySelectorAll('.article-card.expanded');
+        if (expandedCards.length === 0) {
+            blogWrapper.classList.remove('has-expanded');
+            currentExpandedCard = null;
+        }
+    }
+    
+    // 全局收起函数（供按钮调用）
+    window.collapseArticle = function(event) {
+        event.stopPropagation();
+        const card = event.target.closest('.article-card');
+        if (card) {
+            collapseArticleCard(card);
+            
+            // 滚动回卡片位置
+            setTimeout(() => {
+                card.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center'
+                });
+            }, 100);
+        }
     };
     
+    // ========== 图文弹窗模式 ==========
+    
+    /**
+     * 打开图文弹窗（没有 data-md 的图文作品）
+     */
+    function openModal(card) {
+        if (!modal) return;
+        
+        const img = card.querySelector('.article-cover img');
+        const titleEl = card.querySelector('.article-title');
+        const excerptEl = card.querySelector('.article-excerpt');
+        
+        // 设置图片
+        if (img && modalImg) {
+            modalImg.src = img.src;
+        }
+        
+        // 设置标题
+        if (titleEl && modalTitle) {
+            modalTitle.textContent = titleEl.textContent;
+        }
+        
+        // 设置内容
+        if (excerptEl && modalText) {
+            modalText.textContent = excerptEl.textContent;
+        }
+        
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    /**
+     * 关闭弹窗
+     */
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // 弹窗关闭按钮
     if (closeBtn) {
         closeBtn.addEventListener('click', closeModal);
     }
     
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
+    // 点击遮罩关闭弹窗
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+    
+    // ========== 卡片点击事件 ==========
+    
+    document.querySelectorAll('.article-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // 如果点击的是收起按钮，不处理
+            if (e.target.closest('.article-collapse-btn')) {
+                return;
+            }
+            
+            // 如果卡片已展开，点击内容区域不收起
+            if (this.classList.contains('expanded')) {
+                return;
+            }
+            
+            // 根据是否有 data-md 属性决定使用哪种模式
+            if (this.dataset.md) {
+                // 有 markdown 文件 -> 展开模式
+                expandArticle(this);
+            } else {
+                // 没有 markdown 文件 -> 弹窗模式
+                openModal(this);
+            }
+        });
     });
     
+    // ========== 快捷键 ==========
+    
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
+        if (e.key === 'Escape') {
+            // ESC 键收起展开的文章或关闭弹窗
+            if (currentExpandedCard) {
+                collapseArticleCard(currentExpandedCard);
+            }
+            if (modal && modal.classList.contains('active')) {
+                closeModal();
+            }
+        }
+    });
+    
+    // ========== 回到顶部按钮 ==========
+    
+    const scrollBtn = document.createElement('button');
+    scrollBtn.className = 'scroll-to-article';
+    scrollBtn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    scrollBtn.title = '回到文章顶部';
+    document.body.appendChild(scrollBtn);
+    
+    scrollBtn.addEventListener('click', () => {
+        if (currentExpandedCard) {
+            currentExpandedCard.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start'
+            });
+        }
+    });
+    
+    // 监听滚动，显示/隐藏回到顶部按钮
+    window.addEventListener('scroll', () => {
+        if (currentExpandedCard) {
+            const cardRect = currentExpandedCard.getBoundingClientRect();
+            if (cardRect.top < -200) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        } else {
+            scrollBtn.classList.remove('visible');
         }
     });
 });

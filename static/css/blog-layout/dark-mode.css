@@ -50,18 +50,65 @@ body.dark-mode .author-links a {
     color: #ccc;
 }
 
-/* 弹窗深色模式 */
+/* ========== 展开模式深色主题 ========== */
+
+body.dark-mode .article-card.expanded {
+    box-shadow: 0 8px 40px rgba(var(--miku-color-rgb, 57, 197, 187), 0.3);
+}
+
+body.dark-mode .article-expand-content {
+    background: #2a2a2a;
+}
+
+body.dark-mode .article-expand-content .markdown-body {
+    color: #e0e0e0;
+}
+
+body.dark-mode .article-expand-content .markdown-body h1,
+body.dark-mode .article-expand-content .markdown-body h2,
+body.dark-mode .article-expand-content .markdown-body h3 {
+    color: #f0f0f0;
+}
+
+body.dark-mode .article-expand-content .markdown-body pre {
+    background: #1e1e1e;
+}
+
+body.dark-mode .article-expand-content .markdown-body code {
+    background: rgba(var(--miku-color-rgb, 57, 197, 187), 0.2);
+    color: #e0e0e0;
+}
+
+body.dark-mode .article-expand-content .markdown-body blockquote {
+    background: rgba(var(--miku-color-rgb, 57, 197, 187), 0.1);
+    color: #ccc;
+}
+
+body.dark-mode .article-expand-content .md-loading {
+    color: #999;
+}
+
+body.dark-mode .article-expand-content .md-error {
+    background: #3d2020;
+    color: #ff8080;
+}
+
+body.dark-mode .article-collapse-btn {
+    background: linear-gradient(135deg, var(--miku-color, #39c5bb) 0%, #27ae60 100%);
+}
+
+body.dark-mode .scroll-to-article {
+    background: var(--miku-color, #39c5bb);
+}
+
+/* ========== 弹窗深色主题 ========== */
+
 body.dark-mode .modal-content {
     background: #2a2a2a;
 }
 
 body.dark-mode .modal-title {
     color: #f0f0f0;
-}
-
-body.dark-mode .modal-meta {
-    color: #888;
-    border-color: #444;
 }
 
 body.dark-mode .modal-text {

@@ -2,11 +2,13 @@
 
 .article-card {
     display: flex;
+    flex-direction: row;  /* 默认横向布局 */
+    align-items: stretch;  /* 让子元素等高 */
     background: #fff;
     border-radius: 16px;
-    overflow: hidden;
+    overflow: visible;  /* 改为 visible，让内容不被截断 */
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
 }
 
@@ -22,7 +24,11 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: 180px;
+    min-height: 150px;
+    order: 0;  /* 默认顺序 */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    border-radius: 16px 0 0 16px;  /* 左侧圆角 */
 }
 
 .article-title {
@@ -78,14 +84,20 @@
 /* 文章封面图（右侧） */
 .article-cover {
     width: 280px;
-    height: 180px;
+    min-height: 180px;
     overflow: hidden;
     flex-shrink: 0;
     background: #f5f5f5;
     border-radius: 0 16px 16px 0;
+    order: 0;  /* 默认顺序，确保收起后恢复 */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;  /* 让图片绝对定位 */
 }
 
 .article-cover img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;

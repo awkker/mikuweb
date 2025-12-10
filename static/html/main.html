@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/main-frame.css">
     <link rel="stylesheet" href="../css/top-navbar.css">
+    <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -32,11 +33,54 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>
+
+        <div class="user-dropdown-container">
     
-        <div class="circle-btn glass-style">
-            <img src="../images/picture/logo/user.png" alt="User">
+            <div class="circle-btn glass-style" id="user-btn" onclick="UserModule.handleUserClick()">
+                <img id="user-avatar" src="../images/picture/logo/user.png" alt="User">
+            </div>
+        
+            <div class="dropdown-menu glass-style" id="user-menu">
+                <div class="menu-header">
+                    <span class="menu-status">当前已登录</span>
+                    <span class="menu-username" id="menu-username">awkker</span>
+                </div>
+                
+                <div class="menu-divider"></div>
+        
+                <a href="./admin/write.html" class="menu-item" target="contentFrame">撰写文章</a>
+                
+                <div class="menu-divider"></div>
+        
+                <div class="menu-item logout-item" onclick="UserModule.logout()">退出登录</div>
+            </div>
+        
         </div>
     
+    </div>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="login-overlay">
+        <div class="login-box glass-style">
+            <span class="close-btn" onclick="LoginModal.hide()">×</span>
+            
+            <div class="login-header">
+                <img src="../images/picture/author/xunyi.png" alt="Miku" class="login-avatar">
+                <h3>管理员登录</h3>
+                <p>请输入通行口令 (o゜▽゜)o☆</p>
+            </div>
+    
+            <div class="login-body">
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password" autocomplete="off">
+                </div>
+                
+                <button class="login-submit-btn" onclick="LoginModal.submit()">
+                    立 即 登 录
+                </button>
+            </div>
+        </div>
     </div>
 
    <!-- 汉堡菜单按钮 -->
@@ -143,6 +187,7 @@
     <div id="aplayer"></div>
 
     <!-- JavaScript -->
+    <script src="../js/user.js"></script>
     <script src="../js/navbar.js"></script>
     <script src="../js/main-frame.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>

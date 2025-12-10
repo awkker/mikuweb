@@ -1,0 +1,363 @@
+/* 博客布局 - 文章展开阅读样式 */
+/* 瀑布式展开效果 + 一镜到底体验 */
+
+/* ========== 展开状态下的布局变化 ========== */
+
+/* 当有文章展开时，整体布局调整 */
+.blog-wrapper.has-expanded {
+    /* 保持flex布局 */
+}
+
+/* 展开时作者侧边栏缩小 */
+.blog-wrapper.has-expanded .author-sidebar {
+    width: 200px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-wrapper.has-expanded .author-card {
+    padding: 20px 16px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-wrapper.has-expanded .author-avatar {
+    width: 80px;
+    height: 80px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-wrapper.has-expanded .author-name {
+    font-size: 1.2rem;
+    transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-wrapper.has-expanded .author-bio {
+    font-size: 0.85rem;
+    transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blog-wrapper.has-expanded .author-links a {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== 文章卡片展开状态 ========== */
+
+/* 展开状态的文章卡片 */
+.article-card.expanded {
+    flex-direction: column;
+    cursor: default;
+    transform: none;
+    box-shadow: 0 8px 40px rgba(var(--miku-color-rgb, 57, 197, 187), 0.2);
+}
+
+.article-card.expanded:hover {
+    transform: none;
+}
+
+/* 展开时的封面图 - 从右边滑到顶部 */
+.article-card.expanded .article-cover {
+    width: 100%;
+    height: 300px;
+    order: -1;
+    border-radius: 16px 16px 0 0;
+    animation: slideFromRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform-origin: right center;
+}
+
+/* 图片从右往左展开的动画 */
+@keyframes slideFromRight {
+    0% {
+        clip-path: inset(0 0 0 70%);  /* 从右边开始，只显示右边30% */
+        opacity: 0.8;
+    }
+    100% {
+        clip-path: inset(0 0 0 0);    /* 完全显示 */
+        opacity: 1;
+    }
+}
+
+.article-card.expanded .article-cover img {
+    transform: none;
+    animation: imageReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes imageReveal {
+    0% {
+        transform: translateX(20px) scale(1.05);
+    }
+    100% {
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* 展开时的文章信息 */
+.article-card.expanded .article-info {
+    min-height: auto;
+    padding: 24px 32px 16px;
+    order: 0;
+    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-card.expanded .article-title {
+    font-size: 1.6rem;
+    transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 展开时隐藏摘要（因为会显示全文） */
+.article-card.expanded .article-excerpt {
+    display: none;
+}
+
+/* ========== 展开内容区域 ========== */
+
+/* 文章展开内容容器 - 默认隐藏 */
+.article-expand-content {
+    display: none;
+    opacity: 0;
+    padding: 0 32px;
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+}
+
+/* 展开状态下显示内容 */
+.article-card.expanded .article-expand-content {
+    display: block;
+    opacity: 1;
+    padding: 0 32px 32px;
+    overflow: visible;  /* 确保内容不被截断 */
+    animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Markdown 内容样式 */
+.article-expand-content .markdown-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.article-expand-content .markdown-body h1,
+.article-expand-content .markdown-body h2,
+.article-expand-content .markdown-body h3 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.article-expand-content .markdown-body h1 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--miku-color, #39c5bb);
+    padding-bottom: 8px;
+}
+
+.article-expand-content .markdown-body h2 {
+    font-size: 1.5rem;
+    color: var(--miku-color, #39c5bb);
+}
+
+.article-expand-content .markdown-body h3 {
+    font-size: 1.25rem;
+}
+
+.article-expand-content .markdown-body p {
+    margin-bottom: 16px;
+    text-align: justify;
+}
+
+.article-expand-content .markdown-body img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 16px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.article-expand-content .markdown-body pre {
+    background: #f6f8fa;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.article-expand-content .markdown-body code {
+    background: rgba(var(--miku-color-rgb, 57, 197, 187), 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.article-expand-content .markdown-body pre code {
+    background: none;
+    padding: 0;
+}
+
+.article-expand-content .markdown-body blockquote {
+    border-left: 4px solid var(--miku-color, #39c5bb);
+    margin: 16px 0;
+    padding: 12px 20px;
+    background: rgba(var(--miku-color-rgb, 57, 197, 187), 0.05);
+    border-radius: 0 8px 8px 0;
+}
+
+.article-expand-content .markdown-body a {
+    color: var(--miku-color, #39c5bb);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--miku-color, #39c5bb);
+    transition: all 0.3s ease;
+}
+
+.article-expand-content .markdown-body a:hover {
+    background: rgba(var(--miku-color-rgb, 57, 197, 187), 0.1);
+}
+
+/* ========== 加载状态 ========== */
+
+.article-expand-content .md-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #888;
+    font-size: 1rem;
+}
+
+.article-expand-content .md-loading::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f0f0;
+    border-top-color: var(--miku-color, #39c5bb);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: loading-spin 1s linear infinite;
+}
+
+@keyframes loading-spin {
+    to { transform: rotate(360deg); }
+}
+
+.article-expand-content .md-error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #e74c3c;
+    background: #fdf2f2;
+    border-radius: 8px;
+    margin: 16px 0;
+}
+
+/* ========== 收起按钮 ========== */
+
+.article-collapse-btn {
+    display: none;
+    width: 100%;
+    padding: 16px;
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--miku-color, #39c5bb) 0%, #2ecc71 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.article-collapse-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.article-collapse-btn:hover::before {
+    left: 100%;
+}
+
+.article-collapse-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--miku-color-rgb, 57, 197, 187), 0.4);
+}
+
+.article-card.expanded .article-collapse-btn {
+    display: block;
+}
+
+/* ========== 其他未展开卡片的状态 ========== */
+
+/* 当有卡片展开时，其他卡片变淡 */
+.blog-wrapper.has-expanded .article-card:not(.expanded) {
+    opacity: 0.6;
+    transform: scale(0.98);
+    transition: all 0.4s ease;
+}
+
+.blog-wrapper.has-expanded .article-card:not(.expanded):hover {
+    opacity: 0.85;
+    transform: scale(1);
+}
+
+/* ========== 回到顶部提示 ========== */
+
+.scroll-to-article {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--miku-color, #39c5bb);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(var(--miku-color-rgb, 57, 197, 187), 0.4);
+    z-index: 1000;
+}
+
+.scroll-to-article.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-article:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(var(--miku-color-rgb, 57, 197, 187), 0.5);
+}
+
+/* ========== 平滑滚动 ========== */
+
+html {
+    scroll-behavior: smooth;
+}
