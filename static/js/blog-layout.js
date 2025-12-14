@@ -11,10 +11,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeBtn = document.querySelector('.modal-close');
     
     let currentExpandedCard = null;
-    
+
     // 如果没有博客容器，不初始化
     if (!blogWrapper) return;
-    
+
+    /**
+     * 移除 Markdown 文件的 Front Matter (文章属性信息)
+     * Front Matter 格式: --- 开头和结尾的部分
+     */
+    function removeFrontMatter(markdownText) {
+        // 检查是否以 --- 开头 (Front Matter 的开始标记)
+        if (!markdownText.trim().startsWith('---')) {
+            return markdownText; // 没有 Front Matter，直接返回
+        }
+
+        // 查找第一个 --- 后的内容
+        const firstPart = markdownText.indexOf('---');
+        if (firstPart === -1) return markdownText;
+
+        // 从第一个 --- 后开始查找结束标记 ---
+        const remainingText = markdownText.substring(firstPart + 3);
+        const secondPart = remainingText.indexOf('---');
+
+        if (secondPart === -1) {
+            // 没有找到结束标记，返回原始内容
+            return markdownText;
+        }
+
+        // 返回移除 Front Matter 后的内容
+        const contentStart = firstPart + 3 + secondPart + 3;
+        return markdownText.substring(contentStart).trim();
+    }
+
     /**
      * 加载并渲染 Markdown 文件
      */
@@ -30,13 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`无法加载文件: ${mdPath} (状态码: ${response.status})`);
             }
             
-            const markdownText = await response.text();
-            
+            let markdownText = await response.text();
+
             // 检查是否有 marked 库
             if (typeof marked === 'undefined') {
                 throw new Error('marked 库未加载，请引入 marked.js');
             }
-            
+
+            // 移除 Front Matter (文章属性信息)
+            markdownText = removeFrontMatter(markdownText);
+
             // 解析 Markdown
             const dirtyHtml = marked.parse(markdownText);
             
@@ -214,7 +245,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ========== 卡片点击事件 ==========
     
-    document.querySelectorAll('.article-card').forEach(card => {
+    /**
+     * 绑定单个卡片的点击事件
+     */
+    function bindCardClick(card) {
+        // 避免重复绑定
+        if (card.dataset.bound) return;
+        card.dataset.bound = 'true';
+        
         card.addEventListener('click', function(e) {
             // 如果点击的是收起按钮，不处理
             if (e.target.closest('.article-collapse-btn')) {
@@ -235,7 +273,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 openModal(this);
             }
         });
-    });
+    }
+    
+    /**
+     * 绑定所有卡片的点击事件
+     */
+    function bindAllCards() {
+        document.querySelectorAll('.article-card').forEach(bindCardClick);
+    }
+    
+    // 初始绑定
+    bindAllCards();
+    
+    // 监听动态加载事件，重新绑定新卡片
+    document.addEventListener('posts-loaded', bindAllCards);
     
     // ========== 快捷键 ==========
     

@@ -36,7 +36,8 @@ type Post struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`
 	Title     string    `json:"title"`
 	Summary   string    `json:"summary"`
-	Content   string    `json:"content" gorm:"type:text"` // 长文本`
+	Cover     string    `json:"cover"`                    // 封面图 URL
+	Content   string    `json:"content" gorm:"type:text"` // 长文本
 	Tags      string    `json:"tags"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -55,8 +56,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 // saveToMDFile 把文章保存为 .md 文件
 func saveToMDFile(post Post) error {
-    // 1. 确保有个文件夹叫 "articles"
-    // 如果没有，程序会自动创建一个
+    // 1. 确保有个文件夹叫 "md"
     dir := "md"
     if _, err := os.Stat(dir); os.IsNotExist(err) {
         os.Mkdir(dir, 0755)
@@ -69,6 +69,7 @@ title: %s
 date: %s
 tags: [%s]
 summary: %s
+cover: %s
 ---
 
 %s
@@ -77,13 +78,13 @@ summary: %s
         post.CreatedAt.Format("2006-01-02 15:04:05"), // 时间格式化
         post.Tags,
         post.Summary,
-        post.Content, // 正文
+        post.Cover,    // 封面图 URL
+        post.Content,  // 正文
     )
 
     // 3. 生成文件名：ID-标题.md
-    // 为了防止标题里有斜杠 "/" 导致路径错误，简单替换一下
     safeTitle := strings.ReplaceAll(post.Title, "/", "-")
-    safeTitle = strings.ReplaceAll(safeTitle, " ", "-") // 空格换横杠
+    safeTitle = strings.ReplaceAll(safeTitle, " ", "-")
     filename := fmt.Sprintf("%d-%s.md", post.ID, safeTitle)
     filePath := filepath.Join(dir, filename)
 
@@ -155,7 +156,7 @@ func main() {
 	// --- 博客相关 (只读) ---
 	r.GET("/posts", func(c *gin.Context) {
 		var posts []Post
-		db.Select("id, title, summary, tags, created_at").Order("created_at desc").Find(&posts)
+		db.Select("id, title, summary, cover, tags, created_at").Order("created_at desc").Find(&posts)
 		c.JSON(200, posts)
 	})
 

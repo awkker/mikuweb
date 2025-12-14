@@ -1,0 +1,132 @@
+:root {
+    --primary: #39c5bb;
+    --primary-light: #6be3db;
+    --primary-hover: #2daaa0;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+body { 
+    margin: 0; 
+    padding: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+    background: rgba(255, 255, 255, 0.85);
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+}
+
+/* --- 主容器 --- */
+.main-container { 
+    flex: 1; 
+    display: flex; 
+    padding: 100px 20px 20px 20px; 
+    gap: 20px; 
+    overflow: hidden; 
+}
+
+/* 发布按钮 */
+.publish-tool { 
+    color: var(--primary) !important; 
+}
+.publish-tool:hover { 
+    background: var(--primary) !important; 
+    color: white !important; 
+}
+.publish-tool:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 通用卡片样式 */
+.pane {
+    border-radius: 16px; 
+    box-shadow: var(--shadow); 
+    border: var(--glass-border);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* 1. 预览区域 
+   Order: 1 
+*/
+.preview-pane { 
+    flex: 1; 
+    background: rgba(255, 255, 255, 0.92); 
+    padding: 40px; 
+    overflow-y: auto; 
+    order: 1;
+}
+
+/* 2. 编辑器区域 
+   Order: 2
+*/
+.editor-pane { 
+    flex: 1; 
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(5px);
+    order: 2; 
+}
+
+/* --- 专注模式逻辑 (隐藏预览) --- */
+.preview-hidden .preview-pane {
+    display: none;
+    flex: 0;
+}
+
+/* 隐藏预览时，编辑器居中 */
+.preview-hidden .editor-pane {
+    flex: initial;
+    width: 850px; /* 类似 A4 纸宽度 */
+    max-width: 100%;
+    margin: 0 auto; /* 居中 */
+}
+
+/* --- 编辑器内部布局 --- */
+.meta-inputs { padding: 15px 20px 5px; display: flex; flex-direction: column; gap: 8px; }
+.input-group input { 
+    width: 100%; border: none; outline: none; background: transparent;
+    font-size: 1rem; padding: 8px 0; border-bottom: 2px solid rgba(0,0,0,0.05); transition: 0.3s; 
+}
+.input-group input:focus { border-bottom-color: var(--primary); }
+#title { font-size: 1.4rem; font-weight: 700; color: #333; }
+
+/* 工具栏 */
+.toolbar { 
+    padding: 8px 15px; 
+    background: rgba(255,255,255,0.4); 
+    border-bottom: 1px solid rgba(0,0,0,0.05); 
+    display: flex; 
+    gap: 4px; 
+    align-items: center;
+    flex-wrap: nowrap; /* 不换行 */
+}
+.tool-btn { 
+    width: 32px; height: 32px; border: none; background: transparent; border-radius: 6px; 
+    color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+}
+.tool-btn:hover { background: #fff; color: var(--primary); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.toolbar-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+.editor-wrapper { flex: 1; position: relative; }
+textarea { 
+    width: 100%; height: 100%; border: none; resize: none; outline: none; 
+    padding: 20px; 
+    font-family: 'Menlo', 'Monaco', monospace; font-size: 15px; line-height: 1.6;
+    background: transparent; color: #333;
+}
+textarea::-webkit-scrollbar { width: 6px; }
+textarea::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+@media (max-width: 768px) {
+    .main-container { flex-direction: column-reverse; }
+    .preview-pane { display: none; } 
+    .editor-pane { order: 1; } 
+}
+
+
